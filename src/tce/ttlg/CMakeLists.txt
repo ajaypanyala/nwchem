@@ -27,4 +27,4 @@ set_source_files_properties(${TTLG_CPP_SOURCE_FILES} PROPERTIES CUDA_SOURCE_PROP
 
 cuda_add_library(ttlg STATIC ${TTLG_CPP_SOURCE_FILES} ${TTLG_CUDA_SOURCE_FILES})
 target_include_directories(ttlg PUBLIC ${PROJECT_SOURCE_DIR}/src/tce/ttlg/includes)
-target_compile_options(ttlg PRIVATE -O3 -Xcompiler -fPIC -std=c++11 -DNOHTIME -Xptxas --warn-on-spills -arch=sm_35)
+target_compile_options(ttlg PRIVATE -O3 -Xcompiler -fPIC -std=c++11 -DNOHTIME -Xptxas --warn-on-spills -arch=${GPU_ARCH})
