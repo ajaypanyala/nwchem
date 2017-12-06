@@ -66,7 +66,7 @@ if(TCE_CUDA)
     target_compile_options(tce_ccsd_t_gpu_c PUBLIC ${NWCHEM_C_OPTIMIZE_FLAGS})
 
 if(CCSD_T_GPU_OLD)
-    cuda_add_library(tce_ccsd_t_cuda STATIC memory.cu sd_t_total.cu)
+    cuda_add_library(tce_ccsd_t_cuda STATIC memory.cu sd_t_total.cu direct_sd1.cu direct_sd2.cu)
 else()
     cuda_add_library(tce_ccsd_t_cuda STATIC memory.cu sd_t_total_ttlg.cu)
 endif()
