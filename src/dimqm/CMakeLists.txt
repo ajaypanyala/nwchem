@@ -57,7 +57,7 @@ set(DIMQM_SOURCE_FILES
 ./qmr_real.F
 ./dimqm_EqmN.F
 ./dimqm_tidy.F
-./dim_sxyz.F
+#./dim_sxyz.F
 ./dimqm_printAtoms.F
 ./dimqm_addop.F
 ./dimqm_lclfld.F
