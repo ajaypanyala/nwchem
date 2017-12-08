@@ -23,7 +23,7 @@ add_subdirectory(deriv)
 add_subdirectory(hondo)
 add_subdirectory(texas)
 add_subdirectory(ints_sp)
-#add_subdirectory(simint)
+add_subdirectory(simint)
 
 add_library(NWints STATIC ${NWINTS_SOURCE_FILES} $<TARGET_OBJECTS:nwints_api_opt> 
 $<TARGET_OBJECTS:nwints_api_un> $<TARGET_OBJECTS:nwints_hondo_opt> $<TARGET_OBJECTS:nwints_hondo_un>
@@ -31,7 +31,7 @@ $<TARGET_OBJECTS:nwints_texas_un> $<TARGET_OBJECTS:nwints_texas_opt> $<TARGET_OB
 $<TARGET_OBJECTS:nwints_ecp_un> $<TARGET_OBJECTS:nwints_ecp_opt> $<TARGET_OBJECTS:nwints_deriv>
 $<TARGET_OBJECTS:nwints_sp_un> $<TARGET_OBJECTS:nwints_sp> $<TARGET_OBJECTS:nwints_dk>
 $<TARGET_OBJECTS:nwints_auxil_un> $<TARGET_OBJECTS:nwints_auxil_opt>
-$<TARGET_OBJECTS:nwints_rel_un> $<TARGET_OBJECTS:nwints_rel_opt> 
+$<TARGET_OBJECTS:nwints_rel_un> $<TARGET_OBJECTS:nwints_rel_opt> $<TARGET_OBJECTS:nwints_simint> 
 )
 
 target_include_directories(NWints PUBLIC ${NWC_INCLUDES} ${NWINTS_INCLUDES})
