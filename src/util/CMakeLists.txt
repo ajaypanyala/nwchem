@@ -141,6 +141,7 @@ lcopy.f
 output.f
 scatter.f
 zsum.f
+util_scalapack_info.F
 )
 
 set(UTIL_C_OPT_SOURCES 
