@@ -1829,12 +1829,12 @@ endif
            endif
            CPP=fpp -P 
 	   ifeq ($(_IFCV15ORNEWER), Y)
-             FOPTIONS += -qopt-report-file=stderr
 # fpp seems to get lost with ifort 15 in the offload bit
 # only use EXPLICITF for offload because otherwise we want debugging to be easy
 #            FOPTIONS +=  -Qoption,fpp,-P -Qoption,fpp,-c_com=no  -allow nofpp_comments 
              ifdef USE_OPTREPORT
-	  FOPTIONS += -qopt-report=3 -qopt-report-phase=vec,cg,loop,ipo
+             FOPTIONS += -qopt-report-file=stderr
+ 	  FOPTIONS += -qopt-report=3 -qopt-report-phase=vec,cg,loop,ipo
                ifeq ($(_IFCV17), Y)
                  FOPTIONS += -qopt-report-annotate-position=both
                endif
@@ -2095,7 +2095,10 @@ $(error )
         endif
         FOPTIMIZE  += -fprefetch-loop-arrays #-ftree-loop-linear
         ifeq ($(GNU_GE_4_8),true)
-          FOPTIMIZE  += -ftree-vectorize   -fopt-info-vec
+          FOPTIMIZE  += -ftree-vectorize   
+             ifdef USE_OPTREPORT
+                FOPTIMIZE  += -fopt-info-vec
+             endif
         endif
 
         FDEBUG += -g -O 
@@ -2656,7 +2659,11 @@ MKDIR = mkdir
 #
 # Define known suffixes mostly so that .p files don\'t cause pc to be invoked
 #
-
+V = 0
+ACTUAL_FC := $(FC)
+NWFC_0 = @echo "Compiling $<..."; $(ACTUAL_FC)
+NWFC_1 = $(ACTUAL_FC)
+NWFC = $(NWFC_$(V))
 .SUFFIXES:	
 .SUFFIXES:	.o .s .F .f .c .cpp
 
@@ -2701,7 +2708,7 @@ else
 ifeq ($(XLFMAC),y)
 	$(FC)  -c $(FFLAGS) $(INCLUDES) -WF,"$(DEFINES)" $(shell echo $(LIB_DEFINES) | sed -e "s/-D/-WF,-D/g" | sed -e 's/\"/\\"/g')  $<
 else
-	$(FC)  -c $(FFLAGS) $(CPPFLAGS)  $<
+	$(NWFC)  -c $(FFLAGS) $(CPPFLAGS)  $<
 endif
 endif
 

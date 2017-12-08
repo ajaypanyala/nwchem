@@ -53,16 +53,23 @@ Caveat: Usually you delete a branch after merging it back into master as we did 
 How to re-sync a forked repository
 ====
 
-Adapted from https://help.github.com/articles/syncing-a-fork/  
+Adapted from https://help.github.com/articles/syncing-a-fork/   
+  
+Your fork of nwchem -> git@github.com:USERNAME/nwchem.git
+
+  git clone git@github.com:USERNAME/nwchem.git  
+  cd nwchem  
+
   git remote -v  
   git remote add upstream https://github.com/nwchemgit/nwchem.git  
   git remote -v  
   git fetch upstream  
   git checkout  master  
-  git merge  upstream/master  
+  git merge  upstream/master (OR git pull upstream master)  
   git push  
 (or for new branch: git push origin mynewbranch)  
-  git pull  
+  git pull 
+  
 
 How to merge a Pull
 =====
@@ -109,3 +116,10 @@ $ git diff --stat --cached remotes/origin/release-6-8
 or
 
 $ git diff --stat --cached origin/master
+
+git diff branch1 branch2 --name-only (shows diff b/w 2 branches)
+
+
+
+
+
