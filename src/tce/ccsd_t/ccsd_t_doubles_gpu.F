@@ -261,6 +261,14 @@ c
       IF (.not.MA_PUSH_GET(mt_dbl,bbuf_size,'noname_b',l_bbuf,k_bbuf))
      1       CALL ERRQUIT('ccsd_t_doubles_gpu_1',0,MA_ERR)
 
+      sd_t1_d1_args(1) =  int_mb(k_range+t_h1b-1)
+      sd_t1_d1_args(2) =  int_mb(k_range+t_h2b-1)
+      sd_t1_d1_args(3) =  int_mb(k_range+t_h3b-1)
+      sd_t1_d1_args(4) =  int_mb(k_range+h7b-1)
+      sd_t1_d1_args(5) =  int_mb(k_range+t_p4b-1)
+      sd_t1_d1_args(6) =  int_mb(k_range+t_p5b-1)
+      sd_t1_d1_args(7) =  int_mb(k_range+t_p6b-1)
+
       do ia6=1,9
       p4b=a3(ia6,1)
       p5b=a3(ia6,2)
@@ -275,14 +283,6 @@ c allocate device memory on GPU
      2                int_mb(k_range+t_p5b-1),int_mb(k_range+t_p6b-1))
        notset=0
       ENDIF
-
-      sd_t1_d1_args(1) =  int_mb(k_range+h1b-1)
-      sd_t1_d1_args(2) =  int_mb(k_range+h2b-1)
-      sd_t1_d1_args(3) =  int_mb(k_range+h3b-1)
-      sd_t1_d1_args(4) =  int_mb(k_range+h7b-1)
-      sd_t1_d1_args(5) =  int_mb(k_range+p4b-1)
-      sd_t1_d1_args(6) =  int_mb(k_range+p5b-1)
-      sd_t1_d1_args(7) =  int_mb(k_range+p6b-1)
 
       if((p4b.le.p5b).and.(h2b.le.h3b).and.(p4b.ne.0)) then
       skipped = .false.
