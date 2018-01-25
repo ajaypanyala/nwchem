@@ -153,9 +153,6 @@ c *** debug ***
 c        write(6,*)'step1',ga_nodeid()
 c        call util_flush(6)
 c *************
-        DO efc = 1,9
-         sd_t1_d1_exec(efc)=0
-        END DO
         exec_flag = 1
         notset = 1
         a3(1,1)=t_p4b
@@ -260,6 +257,10 @@ c
      & int_mb(k_range+t_h3b-1)
       IF (.not.MA_PUSH_GET(mt_dbl,bbuf_size,'noname_b',l_bbuf,k_bbuf))
      1       CALL ERRQUIT('ccsd_t_doubles_gpu_1',0,MA_ERR)
+
+      DO efc = 1,9
+         sd_t1_d1_exec(efc)=0
+      END DO
 
       sd_t1_d1_args(1) =  int_mb(k_range+t_h1b-1)
       sd_t1_d1_args(2) =  int_mb(k_range+t_h2b-1)
