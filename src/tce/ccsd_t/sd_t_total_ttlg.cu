@@ -5,6 +5,10 @@
 #include "header.h"
 #include "ourinclude.h"
 
+#define T1 16
+#define T2 16
+#define Tcomm 16
+
 cublasHandle_t handle;
 double* output_d;
 size_t current_i_size;
@@ -86,7 +90,7 @@ extern "C" void sd_t_d1_cuda(int h1d, int h2d, int h3d, int h7d, int p4d, int p5
 		current_i_size = size_triplesx;
 	}
         int perm[6];
-	double beta;
+//	double beta;
 	switch(id)
 	{
 		case 1:
@@ -304,7 +308,7 @@ extern "C" void sd_t_d2_cuda(int h1d, int h2d, int h3d, int p4d, int p5d, int p6
 		current_i_size = size_triplesx;
 	}
         int perm[6];
-	double beta;
+	//double beta;
 	switch(id)
 	{
 		case 1:
@@ -390,7 +394,7 @@ extern "C" void sd_t_d2_cuda(int h1d, int h2d, int h3d, int p4d, int p5d, int p6
 		break;
 	}
 
-        cublasDgemm(handle, transa, transb, m, n, k, &alpha, t2sub_d, h7d, v2sub_d, n, &beta, output_d, n);
+        cublasDgemm(handle, transa, transb, m, n, k, &alpha, t2sub_d, p7d, v2sub_d, n, &beta, output_d, n);
         ttlg_transpose(6, o, perm, output_d, triplesx, 1, beta);
         cudaThreadSynchronize();
         freeGpuMem(t2sub_d);
@@ -427,7 +431,7 @@ extern "C" void sd_t_d2_3_cuda_(Integer *h1d, Integer* h2d, Integer* h3d, Intege
 /*----------------------------------------------------------------------*
  *t3[h3,h2,h1,p6,p4,p5] += t2[p7,p4,h1,h2] * v2[p7,h3,p6,p5]
  *----------------------------------------------------------------------*/
-}
+
 extern "C" void sd_t_d2_4_cuda(int h1d, int h2d, int h3d, int p4d, int p5d, int p6d, int p7d, double *t3, double *t2, double *v2) {
 	sd_t_d2_cuda(h1d, h2d, h3d, p4d,  p5d, p6d,  p7d, t3, t2, v2, 4);
 }
