@@ -31,7 +31,7 @@ int getoff(int index,const int * dims,const int * stride, int n);
 void transpose_check(int n, const type *A, type *B, const type alpha, const type beta,  const int *lda,  int *perm)
 {
 	int i = 0, j;
-	int r_perm[100], lda_s[100], ldb_s[100], temp[100] ;
+	int r_perm[100], lda_s[100], ldb_s[100] ;
 	lda_s[0] = 1;
 	ldb_s[0] = 1;
 	long size = 1;
@@ -49,17 +49,15 @@ void transpose_check(int n, const type *A, type *B, const type alpha, const type
 	}	
 	for(i = 1; i < n; i++)
 	{
-		lda_s[i] = lda_s[i-1] * lda[i-1];
-		ldb_s[i] = ldb_s[i-1] * lda[perm[i-1]];
-	}
-       for(i = 0; i < n; i++)
-        {
-                temp[i] = ldb_s[r_perm[i]];
-        }
-	
+		lda_s[i] = lda_s[i-1] * lda[i];
+	} 
+	for(i = 0; i < n; i++)
+	{
+		ldb_s[i] = lda_s[r_perm[i]];
+	} 
 	for(i=0; i < size; i++)
 	{
-			B[getoff(i, lda, temp, n)] = A[i];
+			B[getoff(i, lda, ldb_s, n)] = A[i];
 	}
 }
 
@@ -73,19 +71,6 @@ using namespace std;
 //template <typename tensortype>
 extern "C"
 void ttlg_transpose(int ndim, int *dims, int *perm, double *input, double *output,double alpha = 1.0, double beta = 0.0){
-#ifdef INPUT	
-	cout <<"Dims: ";
-		for(int i = 0; i < ndim; i++)
-		{
-			cout << dims[i] <<" ";
-		}
-	cout <<"\nPerm: ";
-		for(int i = 0; i < ndim; i++)
-		{
-			cout << perm[i] <<" ";
-		}
-	cout <<"\n";
-#endif
 
 	TensorType dataType = (TensorType) 1;
 
@@ -102,11 +87,12 @@ void ttlg_transpose(int ndim, int *dims, int *perm, double *input, double *outpu
 
 	int * sizes = spec->getSizes();
 	int n = spec->getNdim();
-	if(n == 1 || n == 0)//simply copy out
+	if(n == 1)//simply copy out
 	{
 #ifdef printd
 		cout <<"\n1 D\n";
 #endif
+		printf("\t1\t-2");
 		int ndim = 1;
 		int lda[1];
 		lda[0] = sizes[0];
@@ -147,6 +133,7 @@ cout << myParams. getTime();
 		params[5] = myParams. getSharedMemSize1();
 		int ldb[20];
 		int rperm[20];
+		cout<<"\t"<<n;
 #ifdef printd
 		cout <<"New dims: ";
 #endif
@@ -182,6 +169,7 @@ cout << myParams. getTime();
 		
 		int tmp;
 		BlockingCase caseId = parameterTuner->getCaseId();
+		cout<<"\t"<<caseId.getMode();
 		switch(caseId.getMode())
 		{
 			case BlockingCase::FVI_MATCH_AND_LESST32:
@@ -372,43 +360,6 @@ void fuseIndices(TransposeSpec &spec){
 	int ndim = spec.getNdim();
 	int *perm = spec.getPermutation();
 	int *sizes = spec.getSizes();
-	int rperm[100];
-	for(int i = 0; i <  ndim; i++)
-	{
-		for(int j = i+1; j <  ndim; j++)
-		{
-		if(perm[i] == j)
-		{
-			rperm[j] = i;
-		}
-		}
-	}
-	for(int i = 0; i <  ndim; i++)
-	{
-		if(sizes[i] == 1)
-		{
-			for(int j = i+1; j <  ndim; j++)
-			{
-				sizes[j-1] = sizes[j];
-			}
-			int ind = -1;
-			for(int j = 0; j < ndim; j++)
-			{
-				if(perm[j] > i)
-					perm[j]--;
-				else if (perm[j] == i)
-					ind = j;
-			}
-			//for(int j = rperm[i] + 1; j < ndim; j++)
-			for(int j = ind + 1; j < ndim; j++)
-			{
-				perm[j-1] = perm[j];
-					
-			}
-			ndim--;
-			i--;
-		}
-	}
 	for(int i = 0; i <  ndim-1; i++)
 	{
 		//if((perm[i] == i) && (perm[i+1] == i+1))

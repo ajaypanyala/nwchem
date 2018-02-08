@@ -1,7 +1,4 @@
 #define EXPANDDIMS(funcname, param3, param4, param5, callstring) \
-case 0: \
- CON(funcname,0) <<<param3, param4, param5>>> callstring;\
-break;\
 case 1: \
  CON(funcname,1) <<<param3, param4, param5>>> callstring;\
 break;\

@@ -50,7 +50,7 @@ __device__ __forceinline__ void fvinomgeneralolap_rem_coars(const type * __restr
 		{
 			int toffset2 = texpr2[Id];
 			if(toffset2 % (shm2) < ilimitr && toffset2/shm2 < olimitr)
-				Btmp[bexpr[Id]+i*bcoars] =  alpha* tile[toffset2] + beta *  Btmp[bexpr[Id]+i*bcoars];
+				Btmp[bexpr[Id]+i*bcoars] = alpha* tile[toffset2] + beta *  Btmp[bexpr[Id]+i*bcoars];
 		}
 		__syncthreads();
 	}
@@ -58,7 +58,7 @@ __device__ __forceinline__ void fvinomgeneralolap_rem_coars(const type * __restr
 __device__ __forceinline__  void fvinomgeneralolap_main(const type * __restrict__ Atmp, type *  Btmp,  const int tb_size,  const int* __restrict__ aexpr, const int* __restrict__ bexpr, const int* __restrict__ texpr1, const int * __restrict__  texpr2, const int ilimit, const int olimit, const int rowinc, const int shm2, const int numelems_blk, type alpha, type beta) 
 {
 	//if(blockIdx.x == 0 && blockIdx.y == 0 && blockIdx.z == 0 && threadIdx.x == 1)
-//	printf("ilimit = %d, olimit = %d, tbsize = %d, Atmp = %p, Btmp = %p, txpr2[10] = %d, numblocks = %d \n",ilimit, olimit, tb_size, Atmp, Btmp, texpr2[10], gridDim.x*gridDim.y*gridDim.z); 
+	//printf("ilimit = %d, olimit = %d, tbsize = %d, Atmp = %p, Btmp = %p, txpr2[10] = %d, numblocks = %d \n",ilimit, olimit, tb_size, Atmp, Btmp, texpr2[10], gridDim.x*gridDim.y*gridDim.z); 
 
 	for(int Id=threadIdx.x; Id < numelems_blk; Id+= tb_size)
 	{
@@ -67,8 +67,7 @@ __device__ __forceinline__  void fvinomgeneralolap_main(const type * __restrict_
 	__syncthreads();
 	for(int Id=threadIdx.x; Id < numelems_blk; Id+= tb_size)
 	{
-		int toffset2 = texpr2[Id];
-			Btmp[bexpr[Id]] =alpha* tile[toffset2] + beta*Btmp[bexpr[Id]];
+		Btmp[bexpr[Id]] = alpha*tile[texpr2[Id]] + beta*Btmp[bexpr[Id]];
 	}
 
 }
@@ -191,7 +190,6 @@ void fvinomgeneralolap_CallerWrapper(int ndim, type *  A, type * B,const int ili
 
 #ifdef printd
 	printf("thread_blocks = %d, numthreads = %d, shm = %d\n", numblocks, numthreads, shm);
-	printf("size = %d, ndim = %d, shm = %d\n", size, ndim, shm);
 #endif
 	if(size > 0)
 	{
@@ -278,12 +276,6 @@ void swap(int array[], int ind1, int ind2);
 int  cancoarsen(int *lda, int newndim)
 {
 	if(newndim < 1) return -1;
-	unsigned long vol = 1;
-	for(int i = 0; i < newndim; i++)
-	{
-		vol *= lda[i];
-	}
-	if(vol < 32*100) return -1;
 	for(int i = 0; i < newndim; i++)
 	{
 		if(lda[i] >= 4 && lda[i] <= 31)
@@ -385,7 +377,7 @@ printf("\t%d\t%d\t", ilimit, olimit);
 		lda_s[i] = lda_s[i-1] * lda[i-1];
 		ldb_s[i] = ldb_s[i-1] * ldb[i-1];
 	}
-	if(rperm[alimit] < blimit || rperm[alimit] == blimit && blockB == 1)
+	if(rperm[alimit] < blimit)
 		idx_s[alimit] = 1;
 	else{
 		idx_s[alimit] = (lda[alimit] + blockA - 1) / blockA;

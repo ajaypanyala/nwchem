@@ -1,5 +1,3 @@
-#define ndim 0
-#include STR(../KDir/FNAME)
 #define ndim 1
 #include STR(../KDir/FNAME)
 #define ndim 2

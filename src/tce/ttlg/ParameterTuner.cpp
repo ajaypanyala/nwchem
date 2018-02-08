@@ -100,7 +100,6 @@ class ParameterTuner {
 		unsigned long int volume = spec.getVolume(); 
 		int minnumblocks = numSMs * sharedMemLimitPerSM/(33*32); 
 		nlimit = sqrt(volume/(blockFactor * minnumblocks* 32*32)); 
-		if(nlimit == 0) nlimit = 1;
 		double besteff = 0;
 		for(int limiti = 0; limiti < nlimit; limiti++)
 		{
@@ -127,12 +126,9 @@ class ParameterTuner {
 					else i--;
 					if(blockA == sizes[i-1]) { blockA = 1;}
 					break;
-				}
-			if(i < spec.getNdim())	
+				}	
 				csize*= sizes[i];
 			}
-				if(i == spec.getNdim() + 1)
-					i--;
 			//if(blockA == 1 && i < spec.getNdim()) i++;
 			alimit = i-1;
 			asize = csize;
@@ -186,7 +182,6 @@ class ParameterTuner {
 					if(i == spec.getNdim()) break;
 					//if(permutation[i] < alimit) continue;
 					//if(i > 0 && ((blockA != 1) && (permutation[i] == alimit)))
-					if(i < spec.getNdim())	
 					csize*= sizes[permutation[i]];
 					if(permutation[i] > alimit)
 					{
@@ -199,8 +194,6 @@ class ParameterTuner {
 #ifdef printd
 				cout <<  "\nbsize == "<<csize<<"\n";
 #endif
-				if(i == spec.getNdim() + 1)
-					i--;
 				//if((blockB == 1) && (i < spec.getNdim())) i++;
 				blimit = i-1;
 				//cout<<" alimitp = "<<alimit<<" blimitp = "<<blimit<<"\n";
@@ -403,7 +396,6 @@ class ParameterTuner {
 		int minnumblocks = numSMs * sharedMemLimitPerSM/(33*32); 
 		nlimit = sqrt(volume/(blockFactor * minnumblocks* 32*32)); 
 		//nlimit = 4;
-		if(nlimit == 0) nlimit = 1;
 #ifdef printd
 		cout <<"\nnlimit = "<<nlimit;
 #endif
@@ -441,8 +433,6 @@ class ParameterTuner {
 					}	
 					csize*= sizes[i];
 				}
-				if(i == spec.getNdim() + 1)
-					i--;
 				//if(blockA == 1 && i < spec.getNdim()) i++;
 				alimit = i-1;
 				asize = csize;
@@ -516,14 +506,11 @@ class ParameterTuner {
 						//caseId = BlockingCase::FVI_NOMATCH_GENERAL_OVERLAP;
 						//break;
 					}
-					if(i < spec.getNdim())
 					csize*= sizes[permutation[i]];
 #ifdef printd
 					cout<<"\ni = "<<i<<"bsize "<<csize<<"\n";
 #endif
 				}
-				if(i == spec.getNdim() + 1)
-					i--;
 				//if((blockB == 1) && (i < spec.getNdim())) i++;
 				blimit = i-1;
 				bsize = csize;
