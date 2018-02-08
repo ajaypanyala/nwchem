@@ -5,10 +5,6 @@
 #include "header.h"
 #include "ourinclude.h"
 
-#define T1 16
-#define T2 16
-#define Tcomm 16
-
 cublasHandle_t handle;
 double* output_d;
 size_t current_i_size;
@@ -43,7 +39,6 @@ dev_release_()
     dev_release();
 }
 extern "C" void sd_t_d1_cuda(int h1d, int h2d, int h3d, int h7d, int p4d, int p5d, int p6d, double *triplesx, double *t2sub, double *v2sub, int id) {
-double* output_d;
 	static int count = 0;
 	if(count == 0)
 	{
@@ -84,17 +79,14 @@ double* output_d;
         beta = 0;
         t2sub_d=(double*)getGpuMem(size_t2sub);
         v2sub_d=(double*)getGpuMem(size_v2sub);
-	//if(size_triplesx > current_i_size)
+	if(size_triplesx > current_i_size)
 	{
+        	freeGpuMem(output_d);
         	output_d=(double*)getGpuMem(size_triplesx);
 		current_i_size = size_triplesx;
 	}
-	if(output_d == NULL) 
-	{
-		exit(0);
-	}
         int perm[6];
-	//double beta;
+	double beta;
 	switch(id)
 	{
 		case 1:
@@ -180,12 +172,11 @@ double* output_d;
 		break;
 	}
 
-        cublasDgemm(handle, transa, transb, m, n, k, &alpha, t2sub_d, h7d, v2sub_d, n, &beta, output_d, m);
-       ttlg_transpose(6, o, perm, output_d, t3_d, 1, beta);
+        cublasDgemm(handle, transa, transb, m, n, k, &alpha, t2sub_d, h7d, v2sub_d, n, &beta, output_d, n);
+        ttlg_transpose(6, o, perm, output_d, triplesx, 1, beta);
         cudaThreadSynchronize();
         freeGpuMem(t2sub_d);
         freeGpuMem(v2sub_d);
-  	freeGpuMem(output_d);
 }
 
 /*----------------------------------------------------------------------*
@@ -274,7 +265,6 @@ extern "C" void sd_t_d1_9_cuda_(Integer *h1d, Integer* h2d, Integer* h3d, Intege
 
 extern "C" void sd_t_d2_cuda(int h1d, int h2d, int h3d, int p4d, int p5d, int p6d, int p7d, double *triplesx, double *t2sub, double *v2sub, int id) {
  size_t size_triplesx,size_block_triplesx,size_el_block_triplesx,size_t2sub,size_v2sub;
-double* output_d;
         size_t i;
         double *t2sub_d,*v2sub_d;
         size_triplesx= p4d * p5d * h1d * h3d * h2d * p6d *sizeof(double);
@@ -307,17 +297,14 @@ double* output_d;
         beta = 0;
         t2sub_d=(double*)getGpuMem(size_t2sub);
         v2sub_d=(double*)getGpuMem(size_v2sub);
-	//if(size_triplesx > current_i_size)
+	if(size_triplesx > current_i_size)
 	{
+        	freeGpuMem(output_d);
         	output_d=(double*)getGpuMem(size_triplesx);
 		current_i_size = size_triplesx;
 	}
-	if(output_d == NULL) 
-	{
-		exit(0);
-	}
         int perm[6];
-	//double beta;
+	double beta;
 	switch(id)
 	{
 		case 1:
@@ -403,12 +390,11 @@ double* output_d;
 		break;
 	}
 
-        cublasDgemm(handle, transa, transb, m, n, k, &alpha, t2sub_d, p7d, v2sub_d, n, &beta, output_d, m);
-     ttlg_transpose(6, o, perm, output_d, t3_d, 1, beta);
+        cublasDgemm(handle, transa, transb, m, n, k, &alpha, t2sub_d, h7d, v2sub_d, n, &beta, output_d, n);
+        ttlg_transpose(6, o, perm, output_d, triplesx, 1, beta);
         cudaThreadSynchronize();
         freeGpuMem(t2sub_d);
         freeGpuMem(v2sub_d);
-        	freeGpuMem(output_d);
 }
 
 /*----------------------------------------------------------------------*
@@ -441,7 +427,7 @@ extern "C" void sd_t_d2_3_cuda_(Integer *h1d, Integer* h2d, Integer* h3d, Intege
 /*----------------------------------------------------------------------*
  *t3[h3,h2,h1,p6,p4,p5] += t2[p7,p4,h1,h2] * v2[p7,h3,p6,p5]
  *----------------------------------------------------------------------*/
-
+}
 extern "C" void sd_t_d2_4_cuda(int h1d, int h2d, int h3d, int p4d, int p5d, int p6d, int p7d, double *t3, double *t2, double *v2) {
 	sd_t_d2_cuda(h1d, h2d, h3d, p4d,  p5d, p6d,  p7d, t3, t2, v2, 4);
 }
