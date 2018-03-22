@@ -6,6 +6,7 @@
 #include <locale.h>
 #include <algorithm>
 #include <assert.h>
+#include "header.h"
 using namespace std;
 
 typedef long Integer;
@@ -4255,7 +4256,7 @@ void sd_t_d1_all_cuda(int size_h3, int size_h2, int size_h1, int size_p6, int si
 	cudaMalloc((void**) &dev_t2_3, sizeof(double) * size_h3 * size_p5 * size_p4 * size_h7);
 	cudaMalloc((void**) &dev_v2_3, sizeof(double) * size_h7 * size_p6 * size_h1 * size_h2);
 
-    dev_t3 = t3;
+    dev_t3 = t3_d;
 	//cudaMemcpy(dev_t3,   t3,   sizeof(double) * size_h3 * size_h2 * size_h1 * size_p6 * size_p5 * size_p4, 	cudaMemcpyHostToDevice);
 	cudaMemcpy(dev_t2_4, t2_4, sizeof(double) * size_h1 * size_p6 * size_p5 * size_h7, cudaMemcpyHostToDevice);
 	cudaMemcpy(dev_v2_4, v2_4, sizeof(double) * size_h7 * size_p4 * size_h2 * size_h3, cudaMemcpyHostToDevice);

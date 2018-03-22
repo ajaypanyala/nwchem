@@ -1,7 +1,7 @@
 #ifndef __header_h__
 #define __header_h__
 __device__ double* t3_s_d;
-__device__ double* t3_d;
+static __device__ double* t3_d;
 //static int notset;
 #if defined(__cplusplus)
 extern "C" {

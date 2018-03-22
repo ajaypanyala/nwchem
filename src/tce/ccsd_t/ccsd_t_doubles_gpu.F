@@ -270,6 +270,7 @@ c
       sd_t1_d1_args(6) =  int_mb(k_range+t_p5b-1)
       sd_t1_d1_args(7) =  int_mb(k_range+t_p6b-1)
 
+
       do ia6=1,9
       p4b=a3(ia6,1)
       p5b=a3(ia6,2)
@@ -277,13 +278,6 @@ c
       h1b=a3(ia6,4)
       h2b=a3(ia6,5)
       h3b=a3(ia6,6)
-c allocate device memory on GPU      
-      IF ((usedevice.eq.1).and.(notset.eq.1)) THEN
-       call dev_mem_d(int_mb(k_range+t_h1b-1),int_mb(k_range+t_h2b-1),
-     1                int_mb(k_range+t_h3b-1),int_mb(k_range+t_p4b-1),
-     2                int_mb(k_range+t_p5b-1),int_mb(k_range+t_p6b-1))
-       notset=0
-      ENDIF
 
       if((p4b.le.p5b).and.(h2b.le.h3b).and.(p4b.ne.0)) then
       skipped = .false.

@@ -4,6 +4,7 @@
 #include <sys/time.h>
 #include <locale.h>
 #include <algorithm>
+#include "header.h"
 using namespace std;
 
 #define SIZE_SLICE_1_H3 4
@@ -4174,7 +4175,7 @@ void sd_t_d2_all_cuda(int size_h3, int size_h2, int size_h1, int size_p6, int si
 	cudaMalloc((void**) &dev_t2_9, 	sizeof(double) * size_h3 * size_h1 * size_p6 * size_p7);
 	cudaMalloc((void**) &dev_v2_9, 	sizeof(double) * size_p4 * size_p5 * size_h2 * size_p7);
 
-    dev_t3 = t3;
+    dev_t3 = t3_d;
 	//cudaMemcpy(dev_t3, 	 t3,   sizeof(double) * size_h3 * size_h2 * size_h1 * size_p6 * size_p5 * size_p4, cudaMemcpyHostToDevice);
 	cudaMemcpy(dev_t2_1, t2_1, sizeof(double) * size_h2 * size_h1 * size_p4 * size_p7, cudaMemcpyHostToDevice);
 	cudaMemcpy(dev_v2_1, v2_1, sizeof(double) * size_p5 * size_p6 * size_h3 * size_p7, cudaMemcpyHostToDevice);
