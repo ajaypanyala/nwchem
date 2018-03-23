@@ -40,7 +40,7 @@ typedef long Integer;
 #define NUM_INDEX 		6
 #define CEIL(a, b) 		(((a) + (b) - 1) / (b))
 
-void Pre_PreComputedArrays_1(int*& h_t3_output_base_addr, 
+void Pre_PreComputedArrays_1_sd2(int*& h_t3_output_base_addr, 
 							int*& h_t2_1_ext_addr, int*& h_v2_1_ext_addr,
 							int*& h_t2_2_ext_addr, int*& h_v2_2_ext_addr,
 							int*& h_t2_3_ext_addr, int*& h_v2_3_ext_addr,
@@ -251,7 +251,7 @@ void Pre_PreComputedArrays_1(int*& h_t3_output_base_addr,
 	// Do not need Indirect Arrays for Internal Indices
 }
 
-void Pre_PreComputedArrays_2(int*& h_t3_output_base_addr, 
+void Pre_PreComputedArrays_2_sd(int*& h_t3_output_base_addr, 
 							int*& h_t2_7_ext_addr, int*& h_v2_7_ext_addr,
 							int*& h_t2_8_ext_addr, int*& h_v2_8_ext_addr,
 							int*& h_t2_9_ext_addr, int*& h_v2_9_ext_addr,
@@ -374,7 +374,7 @@ void Pre_PreComputedArrays_2(int*& h_t3_output_base_addr,
 	// Do not need Indirect Arrays for Internal Indices
 }
 
-void Pre_TileApproach_1(int*& h_t3_block_index, int*& h_t3_block_range, int* n_blocks_1, int size_h3, int size_h2, int size_h1, int size_p6, int size_p5, int size_p4, int size_p7)
+void Pre_TileApproach_1_sd2(int*& h_t3_block_index, int*& h_t3_block_range, int* n_blocks_1, int size_h3, int size_h2, int size_h1, int size_p6, int size_p5, int size_p4, int size_p7)
 {
 	int n_blk_h3 = CEIL(size_h3, 4);
 	int n_blk_h2 = CEIL(size_h2, 4);
@@ -476,7 +476,7 @@ void Pre_TileApproach_1(int*& h_t3_block_index, int*& h_t3_block_range, int* n_b
 }
 
 //
-void Pre_TileApproach_2(int*& h_t3_block_index, int*& h_t3_block_range, int* n_blocks_2, int size_h3, int size_h2, int size_h1, int size_p6, int size_p5, int size_p4, int size_p7)
+void Pre_TileApproach_2_sd2(int*& h_t3_block_index, int*& h_t3_block_range, int* n_blocks_2, int size_h3, int size_h2, int size_h1, int size_p6, int size_p5, int size_p4, int size_p7)
 {
 	//
 	int n_blk_h3 = CEIL(size_h3, 4);
@@ -4029,11 +4029,11 @@ void sd_t_d2_all_cuda(int size_h3, int size_h2, int size_h1, int size_p6, int si
 	int *host_v2_1_offset, 	*host_v2_2_offset, 	*host_v2_3_offset, 	*host_v2_4_offset, 	*host_v2_5_offset, 	*host_v2_6_offset, 	*host_v2_7_offset, 	*host_v2_8_offset, 	*host_v2_9_offset;
 
 	// (1) Block-Ranges for Partial Tiles (h_t3_block_index is used in (2)) 
-	Pre_TileApproach_1(h_t3_block_index_1, h_t3_block_range_1, &num_blocks_kernel_1, size_h3, size_h2, size_h1, size_p6, size_p5, size_p4, size_p7);
-	Pre_TileApproach_2(h_t3_block_index_2, h_t3_block_range_2, &num_blocks_kernel_2, size_h3, size_h2, size_h1, size_p6, size_p5, size_p4, size_p7);
+	Pre_TileApproach_1_sd2(h_t3_block_index_1, h_t3_block_range_1, &num_blocks_kernel_1, size_h3, size_h2, size_h1, size_p6, size_p5, size_p4, size_p7);
+	Pre_TileApproach_2_sd2(h_t3_block_index_2, h_t3_block_range_2, &num_blocks_kernel_2, size_h3, size_h2, size_h1, size_p6, size_p5, size_p4, size_p7);
 
 	// (2) Pre-Computed Arrays
-	Pre_PreComputedArrays_1(h_t3_output_base_addr_1, 	host_t2_1_addr, host_v2_1_addr, 
+	Pre_PreComputedArrays_1_sd2(h_t3_output_base_addr_1, 	host_t2_1_addr, host_v2_1_addr, 
 														host_t2_2_addr, host_v2_2_addr,
 														host_t2_3_addr, host_v2_3_addr,
 														host_t2_4_addr, host_v2_4_addr,
@@ -4049,7 +4049,7 @@ void sd_t_d2_all_cuda(int size_h3, int size_h2, int size_h1, int size_p6, int si
 							num_blocks_kernel_1,
 							size_h3, size_h2, size_h1, size_p6, size_p5, size_p4, size_p7);
 	
-	Pre_PreComputedArrays_2(h_t3_output_base_addr_2, 	host_t2_7_addr, host_v2_7_addr,
+	Pre_PreComputedArrays_2_sd(h_t3_output_base_addr_2, 	host_t2_7_addr, host_v2_7_addr,
 														host_t2_8_addr, host_v2_8_addr,
 														host_t2_9_addr, host_v2_9_addr,
 							h_t3_output_ext_offset_2,	host_t2_7_offset, host_v2_7_offset,
