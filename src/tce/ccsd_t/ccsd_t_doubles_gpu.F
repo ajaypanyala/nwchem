@@ -48,10 +48,13 @@ c      call util_flush(6)
 c *************
 c        call sd_init_cuda()
 c        call initmemmodule()
+      write(*,*) "call gpu_1"
       IF(toggle .eq. 2) CALL ccsd_t_doubles_gpu_1(d_t2,k_t2_offset,d_v2,
      + k_v2_offset,a_i0,t_p4b,t_p5b,t_p6b,t_h1b,t_h2b,t_h3b,usedevice)
+      write(*,*) "call gpu_2"
       IF(toggle .eq. 2) CALL ccsd_t_doubles_gpu_2(d_t2,k_t2_offset,d_v2,
      + k_v2_offset,a_i0,t_p4b,t_p5b,t_p6b,t_h1b,t_h2b,t_h3b, usedevice)
+      write(*,*) "call gpu_end"
 c       call finalizememmodule()
       RETURN
       END
@@ -110,8 +113,6 @@ C     i0 ( p4 p5 p6 h1 h2 h3 )_vt + = -1 * P( 9 ) * Sum ( h7 ) * t ( p4 p5 h1 h7
       INTEGER k_b_sort
       INTEGER l_b
       INTEGER k_b
-      INTEGER sd1_call_count
-      INTEGER sd2_call_count
 c     9 calls, 9 ia6, 9args
       INTEGER sd_t1_d1_exec(9)
       INTEGER exec_flag
@@ -923,6 +924,17 @@ C     i0 ( p4 p5 p6 h1 h2 h3 )_vt + = -1 * P( 9 ) * Sum ( p7 ) * t ( p4 p7 h1 h2
       INTEGER k_b_sort
       INTEGER l_b
       INTEGER k_b
+c     new triples code from osu
+      INTEGER sd_t1_d1_exec(9)
+      INTEGER exec_flag
+      INTEGER sd_t1_d1_args(7)
+      INTEGER l_abuf
+      INTEGER k_abuf
+      INTEGER l_bbuf
+      INTEGER k_bbuf
+      INTEGER abuf_size
+      INTEGER bbuf_size
+      INTEGER reg_transpose_tg 
 c Wenjing
 c       integer*8 t1, t2, t
       integer usedevice
@@ -931,6 +943,7 @@ c      DOUBLE PRECISION time_e
 c -- peta-exa --
       INTEGER a3(9,6)
       INTEGER ia6,ja6
+      INTEGER efc
 c --------------
       DOUBLE PRECISION a_c(*)
       LOGICAL skipped
@@ -942,6 +955,7 @@ cc      DO h1b = 1,noab
 cc      DO h2b = h1b,noab
 cc      DO h3b = 1,noab
 c
+        exec_flag = 1
         a3(1,1)=t_p4b
         a3(1,2)=t_p5b
         a3(1,3)=t_p6b
@@ -1024,6 +1038,35 @@ c       write (*,*) "begin one iter in d2"
          end if
         enddo 
 c
+
+      DO p7b = noab+1,noab+nvab
+       
+      abuf_size = 9 * 
+     & int_mb(k_range+p7b-1) * 
+     & int_mb(k_range+t_p4b-1) * int_mb(k_range+t_p5b-1) * 
+     & int_mb (k_range+t_h1b-1)
+      IF (.not.MA_PUSH_GET(mt_dbl,abuf_size,'noname_a',l_abuf,k_abuf)) 
+     1 CALL ERRQUIT('ccsd_t_doubles_gpu_2',0,MA_ERR)
+
+      bbuf_size = 9 *
+     &  int_mb(k_range+p7b-1) *
+     & int_mb(k_range+t_p6b-1) * int_mb(k_range+t_h2b-1) *
+     & int_mb(k_range+t_h3b-1)
+      IF (.not.MA_PUSH_GET(mt_dbl,bbuf_size,'noname_b',l_bbuf,k_bbuf))
+     1       CALL ERRQUIT('ccsd_t_doubles_gpu_2',0,MA_ERR)
+
+      DO efc = 1,9
+         sd_t1_d1_exec(efc)=0
+      END DO
+
+      sd_t1_d1_args(1) =  int_mb(k_range+t_h1b-1)
+      sd_t1_d1_args(2) =  int_mb(k_range+t_h2b-1)
+      sd_t1_d1_args(3) =  int_mb(k_range+t_h3b-1)
+      sd_t1_d1_args(4) =  int_mb(k_range+p7b-1)
+      sd_t1_d1_args(5) =  int_mb(k_range+t_p4b-1)
+      sd_t1_d1_args(6) =  int_mb(k_range+t_p5b-1)
+      sd_t1_d1_args(7) =  int_mb(k_range+t_p6b-1)
+
       do ia6=1,9
       p4b=a3(ia6,1)
       p5b=a3(ia6,2)
@@ -1049,7 +1092,7 @@ c
 ccx      IF (.not.MA_PUSH_GET(mt_dbl,dimc,'noname',l_c_sort,k_c_sort)) CALL
 ccx     & ERRQUIT('ccsd_t_doubles_gpu_2',0,MA_ERR)
 ccx      CALL DFILL(dimc,0.0d0,dbl_mb(k_c_sort),1)
-      DO p7b = noab+1,noab+nvab
+c      DO p7b = noab+1,noab+nvab //moved above
       IF (int_mb(k_spin+p4b-1)+int_mb(k_spin+p7b-1) .eq. int_mb(k_spin+h
      &1b-1)+int_mb(k_spin+h2b-1)) THEN
       IF (ieor(int_mb(k_sym+p4b-1),ieor(int_mb(k_sym+p7b-1),ieor(int_mb(
@@ -1143,11 +1186,16 @@ c      call sd_t_d1_1_dgemm(int_mb(k_range+h1b-1),int_mb(k_range+h2b-1),
 #elif defined(CUDA_IMPL)
       IF (usedevice.eq.1) THEN 
 c      write (*,*) usedevice, 'Run CUDA '
-      call sd_t_d2_1_cuda(int_mb(k_range+h1b-1),int_mb(k_range+h2b-1),
-     1               int_mb(k_range+h3b-1),int_mb(k_range+p4b-1),
-     2               int_mb(k_range+p5b-1),
-     3               int_mb(k_range+p6b-1),int_mb(k_range+p7b-1),
-     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
+c      call sd_t_d2_1_cuda(int_mb(k_range+h1b-1),int_mb(k_range+h2b-1),
+c     1               int_mb(k_range+h3b-1),int_mb(k_range+p4b-1),
+c     2               int_mb(k_range+p5b-1),
+c     3               int_mb(k_range+p6b-1),int_mb(k_range+p7b-1),
+c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
+
+      CALL BUF_COPY(dbl_mb(k_abuf), dbl_mb(k_a_sort),dima)
+      CALL BUF_COPY(dbl_mb(k_bbuf), dbl_mb(k_b_sort),dimb)
+      sd_t1_d1_exec(1) = exec_flag
+
       ELSE
 c      write (*,*) usedevice, 'Run CPU '
       call sd_t_d2_1(int_mb(k_range+h3b-1),int_mb(k_range+h2b-1),
@@ -1179,11 +1227,15 @@ c      call sd_t_d1_1_dgemm(int_mb(k_range+h1b-1),int_mb(k_range+h2b-1),
 #elif defined(CUDA_IMPL)
       IF (usedevice.eq.1) THEN 
 c      write (*,*) usedevice, 'Run CUDA '
-      call sd_t_d2_2_cuda(int_mb(k_range+h1b-1),int_mb(k_range+h2b-1),
-     1               int_mb(k_range+h3b-1),int_mb(k_range+p4b-1),
-     2               int_mb(k_range+p5b-1),
-     3               int_mb(k_range+p6b-1),int_mb(k_range+p7b-1),
-     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
+c      call sd_t_d2_2_cuda(int_mb(k_range+h1b-1),int_mb(k_range+h2b-1),
+c     1               int_mb(k_range+h3b-1),int_mb(k_range+p4b-1),
+c     2               int_mb(k_range+p5b-1),
+c     3               int_mb(k_range+p6b-1),int_mb(k_range+p7b-1),
+c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
+      CALL BUF_COPY(dbl_mb(k_abuf + 1*dima),dbl_mb(k_a_sort),dima)
+      CALL BUF_COPY(dbl_mb(k_bbuf + 1*dimb),dbl_mb(k_b_sort),dimb)
+      sd_t1_d1_exec(2) = exec_flag
+      
       ELSE
 c      write (*,*) usedevice, 'Run CPU '
       call sd_t_d2_2(int_mb(k_range+h3b-1),int_mb(k_range+h2b-1),
@@ -1215,11 +1267,15 @@ c      call sd_t_d1_1_dgemm(int_mb(k_range+h1b-1),int_mb(k_range+h2b-1),
 #elif defined(CUDA_IMPL)
       IF (usedevice.eq.1) THEN 
 c      write (*,*) usedevice, 'Run CUDA '
-      call sd_t_d2_3_cuda(int_mb(k_range+h1b-1),int_mb(k_range+h2b-1),
-     1               int_mb(k_range+h3b-1),int_mb(k_range+p4b-1),
-     2               int_mb(k_range+p5b-1),
-     3               int_mb(k_range+p6b-1),int_mb(k_range+p7b-1),
-     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
+c      call sd_t_d2_3_cuda(int_mb(k_range+h1b-1),int_mb(k_range+h2b-1),
+c     1               int_mb(k_range+h3b-1),int_mb(k_range+p4b-1),
+c     2               int_mb(k_range+p5b-1),
+c     3               int_mb(k_range+p6b-1),int_mb(k_range+p7b-1),
+c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
+      CALL BUF_COPY(dbl_mb(k_abuf + 2*dima),dbl_mb(k_a_sort),dima)
+      CALL BUF_COPY(dbl_mb(k_bbuf + 2*dimb),dbl_mb(k_b_sort),dimb)
+      sd_t1_d1_exec(3) = exec_flag
+
       ELSE
 c      write (*,*) usedevice, 'Run CPU '
       call sd_t_d2_3(int_mb(k_range+h3b-1),int_mb(k_range+h2b-1),
@@ -1251,11 +1307,16 @@ c      call sd_t_d1_1_dgemm(int_mb(k_range+h1b-1),int_mb(k_range+h2b-1),
 #elif defined(CUDA_IMPL)
       IF (usedevice.eq.1) THEN 
 c      write (*,*) usedevice, 'Run CUDA '
-      call sd_t_d2_4_cuda(int_mb(k_range+h1b-1),int_mb(k_range+h2b-1),
-     1               int_mb(k_range+h3b-1),int_mb(k_range+p4b-1),
-     2               int_mb(k_range+p5b-1),
-     3               int_mb(k_range+p6b-1),int_mb(k_range+p7b-1),
-     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
+c      call sd_t_d2_4_cuda(int_mb(k_range+h1b-1),int_mb(k_range+h2b-1),
+c     1               int_mb(k_range+h3b-1),int_mb(k_range+p4b-1),
+c     2               int_mb(k_range+p5b-1),
+c     3               int_mb(k_range+p6b-1),int_mb(k_range+p7b-1),
+c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
+
+      CALL BUF_COPY(dbl_mb(k_abuf + 3*dima),dbl_mb(k_a_sort),dima)
+      CALL BUF_COPY(dbl_mb(k_bbuf + 3*dimb),dbl_mb(k_b_sort),dimb)
+      sd_t1_d1_exec(4) = exec_flag
+
       ELSE
 c      write (*,*) usedevice, 'Run CPU '
       call sd_t_d2_4(int_mb(k_range+h3b-1),int_mb(k_range+h2b-1),
@@ -1287,11 +1348,16 @@ c      call sd_t_d1_1_dgemm(int_mb(k_range+h1b-1),int_mb(k_range+h2b-1),
 #elif defined(CUDA_IMPL)
       IF (usedevice.eq.1) THEN 
 c      write (*,*) usedevice, 'Run CUDA '
-      call sd_t_d2_5_cuda(int_mb(k_range+h1b-1),int_mb(k_range+h2b-1),
-     1               int_mb(k_range+h3b-1),int_mb(k_range+p4b-1),
-     2               int_mb(k_range+p5b-1),
-     3               int_mb(k_range+p6b-1),int_mb(k_range+p7b-1),
-     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
+c      call sd_t_d2_5_cuda(int_mb(k_range+h1b-1),int_mb(k_range+h2b-1),
+c     1               int_mb(k_range+h3b-1),int_mb(k_range+p4b-1),
+c     2               int_mb(k_range+p5b-1),
+c     3               int_mb(k_range+p6b-1),int_mb(k_range+p7b-1),
+c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
+
+      CALL BUF_COPY(dbl_mb(k_abuf + 4*dima),dbl_mb(k_a_sort),dima)
+      CALL BUF_COPY(dbl_mb(k_bbuf + 4*dimb),dbl_mb(k_b_sort),dimb)
+      sd_t1_d1_exec(5) = exec_flag
+
       ELSE
 c      write (*,*) usedevice, 'Run CPU '
       call sd_t_d2_5(int_mb(k_range+h3b-1),int_mb(k_range+h2b-1),
@@ -1323,11 +1389,15 @@ c      call sd_t_d1_1_dgemm(int_mb(k_range+h1b-1),int_mb(k_range+h2b-1),
 #elif defined(CUDA_IMPL)
       IF (usedevice.eq.1) THEN 
 c      write (*,*) usedevice, 'Run CUDA '
-      call sd_t_d2_6_cuda(int_mb(k_range+h1b-1),int_mb(k_range+h2b-1),
-     1               int_mb(k_range+h3b-1),int_mb(k_range+p4b-1),
-     2               int_mb(k_range+p5b-1),
-     3               int_mb(k_range+p6b-1),int_mb(k_range+p7b-1),
-     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
+c      call sd_t_d2_6_cuda(int_mb(k_range+h1b-1),int_mb(k_range+h2b-1),
+c     1               int_mb(k_range+h3b-1),int_mb(k_range+p4b-1),
+c     2               int_mb(k_range+p5b-1),
+c     3               int_mb(k_range+p6b-1),int_mb(k_range+p7b-1),
+c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
+      CALL BUF_COPY(dbl_mb(k_abuf + 5*dima),dbl_mb(k_a_sort),dima)
+      CALL BUF_COPY(dbl_mb(k_bbuf + 5*dimb),dbl_mb(k_b_sort),dimb)
+      sd_t1_d1_exec(6) = exec_flag
+
       ELSE
 c      write (*,*) usedevice, 'Run CPU '
       call sd_t_d2_6(int_mb(k_range+h3b-1),int_mb(k_range+h2b-1),
@@ -1359,11 +1429,16 @@ c      call sd_t_d1_1_dgemm(int_mb(k_range+h1b-1),int_mb(k_range+h2b-1),
 #elif defined(CUDA_IMPL)
       IF (usedevice.eq.1) THEN 
 c      write (*,*) usedevice, 'Run CUDA '
-      call sd_t_d2_7_cuda(int_mb(k_range+h1b-1),int_mb(k_range+h2b-1),
-     1               int_mb(k_range+h3b-1),int_mb(k_range+p4b-1),
-     2               int_mb(k_range+p5b-1),
-     3               int_mb(k_range+p6b-1),int_mb(k_range+p7b-1),
-     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
+c      call sd_t_d2_7_cuda(int_mb(k_range+h1b-1),int_mb(k_range+h2b-1),
+c     1               int_mb(k_range+h3b-1),int_mb(k_range+p4b-1),
+c     2               int_mb(k_range+p5b-1),
+c     3               int_mb(k_range+p6b-1),int_mb(k_range+p7b-1),
+c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
+
+      CALL BUF_COPY(dbl_mb(k_abuf + 6*dima),dbl_mb(k_a_sort),dima)
+      CALL BUF_COPY(dbl_mb(k_bbuf + 6*dimb),dbl_mb(k_b_sort),dimb)
+      sd_t1_d1_exec(7) = exec_flag
+
       ELSE
 c      write (*,*) usedevice, 'Run CPU '
       call sd_t_d2_7(int_mb(k_range+h3b-1),int_mb(k_range+h2b-1),
@@ -1395,11 +1470,15 @@ c      call sd_t_d1_1_dgemm(int_mb(k_range+h1b-1),int_mb(k_range+h2b-1),
 #elif defined(CUDA_IMPL)
       IF (usedevice.eq.1) THEN 
 c      write (*,*) usedevice, 'Run CUDA '
-      call sd_t_d2_8_cuda(int_mb(k_range+h1b-1),int_mb(k_range+h2b-1),
-     1               int_mb(k_range+h3b-1),int_mb(k_range+p4b-1),
-     2               int_mb(k_range+p5b-1),
-     3               int_mb(k_range+p6b-1),int_mb(k_range+p7b-1),
-     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
+c      call sd_t_d2_8_cuda(int_mb(k_range+h1b-1),int_mb(k_range+h2b-1),
+c     1               int_mb(k_range+h3b-1),int_mb(k_range+p4b-1),
+c     2               int_mb(k_range+p5b-1),
+c     3               int_mb(k_range+p6b-1),int_mb(k_range+p7b-1),
+c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
+      CALL BUF_COPY(dbl_mb(k_abuf + 7*dima),dbl_mb(k_a_sort),dima)
+      CALL BUF_COPY(dbl_mb(k_bbuf + 7*dimb),dbl_mb(k_b_sort),dimb)
+      sd_t1_d1_exec(8) = exec_flag
+
       ELSE
 c      write (*,*) usedevice, 'Run CPU '
       call sd_t_d2_8(int_mb(k_range+h3b-1),int_mb(k_range+h2b-1),
@@ -1431,11 +1510,15 @@ c      call sd_t_d1_1_dgemm(int_mb(k_range+h1b-1),int_mb(k_range+h2b-1),
 #elif defined(CUDA_IMPL)
       IF (usedevice.eq.1) THEN 
 c      write (*,*) usedevice, 'Run CUDA '
-      call sd_t_d2_9_cuda(int_mb(k_range+h1b-1),int_mb(k_range+h2b-1),
-     1               int_mb(k_range+h3b-1),int_mb(k_range+p4b-1),
-     2               int_mb(k_range+p5b-1),
-     3               int_mb(k_range+p6b-1),int_mb(k_range+p7b-1),
-     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
+c      call sd_t_d2_9_cuda(int_mb(k_range+h1b-1),int_mb(k_range+h2b-1),
+c     1               int_mb(k_range+h3b-1),int_mb(k_range+p4b-1),
+c     2               int_mb(k_range+p5b-1),
+c     3               int_mb(k_range+p6b-1),int_mb(k_range+p7b-1),
+c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
+      CALL BUF_COPY(dbl_mb(k_abuf + 8*dima),dbl_mb(k_a_sort),dima)
+      CALL BUF_COPY(dbl_mb(k_bbuf + 8*dimb),dbl_mb(k_b_sort),dimb)
+      sd_t1_d1_exec(9) = exec_flag
+
       ELSE
 c      write (*,*) usedevice, 'Run CPU '
       call sd_t_d2_9(int_mb(k_range+h3b-1),int_mb(k_range+h2b-1),
@@ -1458,7 +1541,7 @@ c      write (*,*) usedevice, 'Run CPU '
       END IF
       END IF
       END IF
-      END DO ! p7b loop
+c      END DO ! p7b loop //moved below
 c
       END IF
       END IF
@@ -1467,6 +1550,42 @@ c
 c
       END IF
       END DO
+
+            IF ((sd_t1_d1_exec(1) .eq. exec_flag) .or. 
+     & (sd_t1_d1_exec(2) .eq. exec_flag) .or. 
+     & (sd_t1_d1_exec(3) .eq. exec_flag) .or.
+     & (sd_t1_d1_exec(4) .eq. exec_flag) .or.
+     & (sd_t1_d1_exec(5) .eq. exec_flag) .or. 
+     & (sd_t1_d1_exec(6) .eq. exec_flag) .or.
+     & (sd_t1_d1_exec(7) .eq. exec_flag) .or.
+     & (sd_t1_d1_exec(8) .eq. exec_flag) .or.
+     & (sd_t1_d1_exec(9) .eq. exec_flag) ) THEN
+         reg_transpose_tg = 1
+
+         write(*,*) "tg_d2 debug1"
+       CALL sd_t_d2_all_cuda_(sd_t1_d1_args(3),
+     &                  sd_t1_d1_args(2),
+     &                  sd_t1_d1_args(1),
+     &                  sd_t1_d1_args(7),
+     &                  sd_t1_d1_args(6),
+     &                  sd_t1_d1_args(5),
+     &                  sd_t1_d1_args(4),
+     &                  a_c,
+     &                  dbl_mb(k_abuf),dbl_mb(k_bbuf),
+     &      sd_t1_d1_exec(1),sd_t1_d1_exec(2),sd_t1_d1_exec(3),
+     &      sd_t1_d1_exec(4),sd_t1_d1_exec(5),sd_t1_d1_exec(6),
+     &      sd_t1_d1_exec(7),sd_t1_d1_exec(8),sd_t1_d1_exec(9),
+     &        reg_transpose_tg)
+                write(*,*) "tg_d2 debug2"
+      END IF 
+
+      IF (.not.MA_POP_STACK(l_bbuf)) 
+     + CALL ERRQUIT('ccsd_t_doubles_gpu_2',7,MA_ERR)
+      IF (.not.MA_POP_STACK(l_abuf)) 
+     + CALL ERRQUIT('ccsd_t_doubles_gpu_2',8,MA_ERR)
+
+      END DO !p7b loop
+
 c      call dev_release()
 c      call finalizememmodule()
       RETURN

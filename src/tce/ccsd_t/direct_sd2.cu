@@ -7,6 +7,8 @@
 #include "header.h"
 using namespace std;
 
+typedef long Integer;
+
 #define SIZE_SLICE_1_H3 4
 #define SIZE_SLICE_1_H2 4
 #define SIZE_SLICE_1_H1 4
@@ -4388,7 +4390,7 @@ void sd_t_d2_all_cuda(int size_h3, int size_h2, int size_h1, int size_p6, int si
 
 //
 extern "C"
-void sd_t_d2_all_cuda_(int size_h3, int size_h2, int size_h1, int size_p6, int size_p5, int size_p4, int size_p7, 
+void sd_t_d2_all_cuda_(Integer* psize_h3, Integer* psize_h2, Integer* psize_h1, Integer* psize_p6, Integer* psize_p5, Integer* psize_p4, Integer* psize_p7, 
 	double* t3, 
 	double* t2_1, double* v2_1,
 	double* t2_2, double* v2_2,
@@ -4399,11 +4401,30 @@ void sd_t_d2_all_cuda_(int size_h3, int size_h2, int size_h1, int size_p6, int s
 	double* t2_7, double* v2_7,
 	double* t2_8, double* v2_8,
 	double* t2_9, double* v2_9, 
-	int kernel_1, int kernel_2, int kernel_3, 
-	int kernel_4, int kernel_5, int kernel_6, 
-	int kernel_7, int kernel_8, int kernel_9, 
-	int opt_register_transpose)
+    Integer* pkernel_1, Integer* pkernel_2, Integer* pkernel_3,
+	Integer* pkernel_4, Integer* pkernel_5, Integer* pkernel_6,
+	Integer* pkernel_7, Integer* pkernel_8, Integer* pkernel_9,
+	Integer* popt_register_transpose)
 {
+	int size_h3 = *psize_h3;
+	int size_h2 = *psize_h2;
+	int size_h1 = *psize_h1;
+	int size_p6 = *psize_p6;
+	int size_p5 = *psize_p5;
+	int size_p4 = *psize_p4;
+	int size_p7 = *psize_p7;
+	int kernel_1 = *pkernel_1;
+	int kernel_2 = *pkernel_2;
+	int kernel_3 = *pkernel_3;
+	int kernel_4 = *pkernel_4;
+	int kernel_5 = *pkernel_5;
+	int kernel_6 = *pkernel_6;
+	int kernel_7 = *pkernel_7;
+	int kernel_8 = *pkernel_8;
+	int kernel_9 = *pkernel_9;
+	int opt_register_transpose = *popt_register_transpose;
+
+
 	sd_t_d2_all_cuda(size_h3, size_h2, size_h1, size_p6, size_p5, size_p4, size_p7, 
 					t3, 
 					t2_1, v2_1,	t2_2, v2_2, t2_3, v2_3,
@@ -4424,16 +4445,34 @@ void sd_t_d2_all_cuda_(int size_h3, int size_h2, int size_h1, int size_p6, int s
 //								(OFF: two kernels for 6 and 3 functions, respectivley).
 //
 extern "C"
-void sd_t_d2_all_cuda__(int 	size_h3, 	int 	size_h2, 	int 	size_h1, 
-						int 	size_p6, 	int 	size_p5, 	int 	size_p4, 	int 	size_p7, 
+void sd_t_d2_all_cuda__(Integer* psize_h3, 	Integer* psize_h2, 	Integer* psize_h1, 
+						Integer* psize_p6, 	Integer* psize_p5, 	Integer* psize_p4, 	Integer* psize_p7, 
 						double* t3,   		double* t2_all,		double* v2_all,
-						int 	kernel_1, 	int 	kernel_2, 	int 	kernel_3, 
-						int 	kernel_4, 	int 	kernel_5, 	int 	kernel_6, 
-						int 	kernel_7, 	int 	kernel_8, 	int 	kernel_9, 
-						int 	opt_register_transpose)
+					   	Integer* pkernel_1, Integer* pkernel_2, Integer* pkernel_3,
+						Integer* pkernel_4, Integer* pkernel_5, Integer* pkernel_6,
+						Integer* pkernel_7, Integer* pkernel_8, Integer* pkernel_9,
+						Integer* popt_register_transpose)
 {
 	unsigned int size_T2_1, size_T2_2, size_T2_3, size_T2_4, size_T2_5, size_T2_6, size_T2_7, size_T2_8;//, size_T2_9;
 	unsigned int size_V2_1, size_V2_2, size_V2_3, size_V2_4, size_V2_5, size_V2_6, size_V2_7, size_V2_8;//, size_V2_9;
+
+	int size_h3 = *psize_h3;
+	int size_h2 = *psize_h2;
+	int size_h1 = *psize_h1;
+	int size_p6 = *psize_p6;
+	int size_p5 = *psize_p5;
+	int size_p4 = *psize_p4;
+	int size_p7 = *psize_p7;
+	int kernel_1 = *pkernel_1;
+	int kernel_2 = *pkernel_2;
+	int kernel_3 = *pkernel_3;
+	int kernel_4 = *pkernel_4;
+	int kernel_5 = *pkernel_5;
+	int kernel_6 = *pkernel_6;
+	int kernel_7 = *pkernel_7;
+	int kernel_8 = *pkernel_8;
+	int kernel_9 = *pkernel_9;
+	int opt_register_transpose = *popt_register_transpose;
 
 	double* t2_1;	double* v2_1;
 	double* t2_2;	double* v2_2;
