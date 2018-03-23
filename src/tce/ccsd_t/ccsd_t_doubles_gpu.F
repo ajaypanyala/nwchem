@@ -842,7 +842,9 @@ c      call finalizememmodule() call all 9
      & (sd_t1_d1_exec(7) .eq. exec_flag) .or.
      & (sd_t1_d1_exec(8) .eq. exec_flag) .or.
      & (sd_t1_d1_exec(9) .eq. exec_flag) ) THEN
-       reg_transpose_tg = 1
+         reg_transpose_tg = 1
+
+         write(*,*) "tg debug1"
        CALL sd_t_d1_all_cuda_(sd_t1_d1_args(3),
      &                  sd_t1_d1_args(2),
      &                  sd_t1_d1_args(1),
@@ -855,7 +857,8 @@ c      call finalizememmodule() call all 9
      &      sd_t1_d1_exec(1),sd_t1_d1_exec(2),sd_t1_d1_exec(3),
      &      sd_t1_d1_exec(4),sd_t1_d1_exec(5),sd_t1_d1_exec(6),
      &      sd_t1_d1_exec(7),sd_t1_d1_exec(8),sd_t1_d1_exec(9),
-     &                  reg_transpose_tg)
+     &        reg_transpose_tg)
+                write(*,*) "tg debug2"
       END IF 
 
       IF (.not.MA_POP_STACK(l_bbuf)) 

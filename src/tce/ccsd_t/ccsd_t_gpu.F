@@ -142,14 +142,6 @@ c
      4           * int_mb(k_range+t_h2b-1)
      5           * int_mb(k_range+t_h3b-1)
 
-c allocate device memory on GPU .and.(notset.eq.1)      
-      IF (has_GPU.eq.1) THEN
-       call dev_mem_d(int_mb(k_range+t_h1b-1),int_mb(k_range+t_h2b-1),
-     1                int_mb(k_range+t_h3b-1),int_mb(k_range+t_p4b-1),
-     2                int_mb(k_range+t_p5b-1),int_mb(k_range+t_p6b-1))
-c       notset=0
-      ENDIF
-
             time1 = - util_wallsec()
             if (.not.MA_PUSH_GET(mt_dbl,size,'(T) singles',l_singles,
      1        k_singles)) call errquit('ccsd_t: MA error',1,MA_ERR)
@@ -180,6 +172,15 @@ c      init GPU mem
               call initmemmodule()
             endif
 
+      write(*,*) "DEBUG1"      
+c allocate device memory on GPU .and.(notset.eq.1)      
+      IF (has_GPU.eq.1) THEN
+       call dev_mem_d(int_mb(k_range+t_h1b-1),int_mb(k_range+t_h2b-1),
+     1                int_mb(k_range+t_h3b-1),int_mb(k_range+t_p4b-1),
+     2                int_mb(k_range+t_p5b-1),int_mb(k_range+t_p6b-1))
+c       notset=0
+      ENDIF
+      write(*,*) "DEBUG2"
 c       NEW
             has_GPU = check_device(icuda)
             call ccsd_t_singles_gpu(dbl_mb(k_singles),
@@ -187,12 +188,15 @@ c       NEW
      2        k_v2_offset,t_h1b,t_h2b,t_h3b,t_p4b,t_p5b,t_p6b,2,
      3        has_GPU)
 
+                  write(*,*) "DEBUG2-singles"
 c            device_me = get_device_id()
 c            if (device_me<NUM_DEVICE) then
             call ccsd_t_doubles_gpu(dbl_mb(k_doubles),d_t2,d_v2,
      +        k_t2_offset,
      1        k_v2_offset,t_h1b,t_h2b,t_h3b,t_p4b,t_p5b,t_p6b,2, 
-     2        has_GPU)
+     2           has_GPU)
+
+              write(*,*) "DEBUG3"
 c            else
 c            call ccsd_t_doubles(dbl_mb(k_doubles),d_t2,d_v2,k_t2_offset,
 c     1        k_v2_offset,t_h1b,t_h2b,t_h3b,t_p4b,t_p5b,t_p6b,2, 0)
