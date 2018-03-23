@@ -1045,14 +1045,14 @@ c
      & int_mb(k_range+p7b-1) * 
      & int_mb(k_range+t_p4b-1) * int_mb(k_range+t_p5b-1) * 
      & int_mb (k_range+t_h1b-1)
-      IF (.not.MA_PUSH_GET(mt_dbl,abuf_size,'noname_a',l_abuf,k_abuf)) 
+      IF (.not.MA_PUSH_GET(mt_dbl,abuf_size,'noname_a2',l_abuf,k_abuf)) 
      1 CALL ERRQUIT('ccsd_t_doubles_gpu_2',0,MA_ERR)
 
       bbuf_size = 9 *
      &  int_mb(k_range+p7b-1) *
      & int_mb(k_range+t_p6b-1) * int_mb(k_range+t_h2b-1) *
      & int_mb(k_range+t_h3b-1)
-      IF (.not.MA_PUSH_GET(mt_dbl,bbuf_size,'noname_b',l_bbuf,k_bbuf))
+      IF (.not.MA_PUSH_GET(mt_dbl,bbuf_size,'noname_b2',l_bbuf,k_bbuf))
      1       CALL ERRQUIT('ccsd_t_doubles_gpu_2',0,MA_ERR)
 
       DO efc = 1,9

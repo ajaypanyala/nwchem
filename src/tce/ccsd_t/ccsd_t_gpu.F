@@ -280,6 +280,8 @@ c            total_all_s = total_all_s + dbl_mb(k_singles+1)
 
             else
 c     GPU process
+              write(*,*) "DEBUG-energy1"
+
               factor_l(1) = factor
               call compute_en(factor_l, energy_l,
      1                  dbl_mb(k_evl_sorted+int_mb(k_offset+t_h1b-1)),
@@ -302,6 +304,7 @@ c              total_all_s = total_all_s + total_s(1)
               energy1 = energy1 + energy_l(1)
               energy2 = energy2 + energy_l(2)
 c    release GPU memory
+            write(*,*) "DEBUG-energy2"
               call dev_release()
               call finalizememmodule()
 c            endif
@@ -324,7 +327,7 @@ c
 ccx            next = nxtask(nprocs,1)
 ccx            endif
 ccx            count = count + 1
-      call dev_release()
+c      call dev_release()
            enddo
           enddo
          enddo
