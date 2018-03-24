@@ -48,13 +48,10 @@ c      call util_flush(6)
 c *************
 c        call sd_init_cuda()
 c        call initmemmodule()
-      write(*,*) "call gpu_1"
       IF(toggle .eq. 2) CALL ccsd_t_doubles_gpu_1(d_t2,k_t2_offset,d_v2,
      + k_v2_offset,a_i0,t_p4b,t_p5b,t_p6b,t_h1b,t_h2b,t_h3b,usedevice)
-      write(*,*) "call gpu_2"
       IF(toggle .eq. 2) CALL ccsd_t_doubles_gpu_2(d_t2,k_t2_offset,d_v2,
      + k_v2_offset,a_i0,t_p4b,t_p5b,t_p6b,t_h1b,t_h2b,t_h3b, usedevice)
-      write(*,*) "call gpu_end"
 c       call finalizememmodule()
       RETURN
       END
@@ -113,7 +110,7 @@ C     i0 ( p4 p5 p6 h1 h2 h3 )_vt + = -1 * P( 9 ) * Sum ( h7 ) * t ( p4 p5 h1 h7
       INTEGER k_b_sort
       INTEGER l_b
       INTEGER k_b
-c     9 calls, 9 ia6, 9args
+c     extra for calling new osu kernels
       INTEGER sd_t1_d1_exec(9)
       INTEGER exec_flag
       INTEGER sd_t1_d1_args(7)
@@ -524,7 +521,6 @@ c      write (*,*) usedevice, 'Run CPU '
      2               int_mb(k_range+p5b-1),int_mb(k_range+p4b-1),
      3               int_mb(k_range+h7b-1),
      4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
-
       END IF 
 #else
       write(*,*) "Choose an implementation of (t) tensor contractions!"
@@ -571,8 +567,6 @@ c      write (*,*) usedevice, 'Run CPU '
      2               int_mb(k_range+p5b-1),int_mb(k_range+p4b-1),
      3               int_mb(k_range+h7b-1),
      4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
-      
-
       END IF 
 #else
       write(*,*) "Choose an implementation of (t) tensor contractions!"
@@ -619,7 +613,6 @@ c      write (*,*) usedevice, 'Run CPU '
      2               int_mb(k_range+p5b-1),int_mb(k_range+p4b-1),
      3               int_mb(k_range+h7b-1),
      4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
-
       END IF 
 #else
       write(*,*) "Choose an implementation of (t) tensor contractions!"
@@ -665,7 +658,6 @@ c      write (*,*) usedevice, 'Run CPU '
      2               int_mb(k_range+p5b-1),int_mb(k_range+p4b-1),
      3               int_mb(k_range+h7b-1),
      4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
-     
       END IF 
 #else
       write(*, *) "Choose an implementation of (t) tensor contractions!"
@@ -707,12 +699,11 @@ c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
 
       ELSE
 c      write (*,*) usedevice, 'Run CPU '
-c      call sd_t_d1_7(int_mb(k_range+h3b-1),int_mb(k_range+h2b-1),
-c     1               int_mb(k_range+h1b-1),int_mb(k_range+p6b-1),
-c     2               int_mb(k_range+p5b-1),int_mb(k_range+p4b-1),
-c     3               int_mb(k_range+h7b-1),
-c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
-  
+      call sd_t_d1_7(int_mb(k_range+h3b-1),int_mb(k_range+h2b-1),
+     1               int_mb(k_range+h1b-1),int_mb(k_range+p6b-1),
+     2               int_mb(k_range+p5b-1),int_mb(k_range+p4b-1),
+     3               int_mb(k_range+h7b-1),
+     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
       END IF 
 #else
       write(*, *) "Choose an implementation of (t) tensor contractions!"
@@ -759,7 +750,6 @@ c      write (*,*) usedevice, 'Run CPU '
      2               int_mb(k_range+p5b-1),int_mb(k_range+p4b-1),
      3               int_mb(k_range+h7b-1),
      4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
-   
       END IF 
 #else
       write(*, *) "Choose an implementation of (t) tensor contractions!"
@@ -799,13 +789,12 @@ c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
       sd_t1_d1_exec(9) = exec_flag
 
       ELSE
-c     write (*,*) usedevice, 'Run CPU '
+c      write (*,*) usedevice, 'Run CPU '
       call sd_t_d1_9(int_mb(k_range+h3b-1),int_mb(k_range+h2b-1),
      1               int_mb(k_range+h1b-1),int_mb(k_range+p6b-1),
      2               int_mb(k_range+p5b-1),int_mb(k_range+p4b-1),
      3               int_mb(k_range+h7b-1),
      4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
-   
       END IF 
 #else
       write(*, *) "Choose an implementation of (t) tensor contractions!"
@@ -814,7 +803,10 @@ c     write (*,*) usedevice, 'Run CPU '
 c *** debug ***
 c        write(6,*)'step15-h7b loop',ga_nodeid()
 c        call util_flush(6)
-
+c
+c
+c
+c
       IF (.not.MA_POP_STACK(l_b_sort)) 
      + CALL ERRQUIT('ccsd_t_doubles_gpu_1',7,MA_ERR)
       IF (.not.MA_POP_STACK(l_a_sort)) 
@@ -832,7 +824,9 @@ c
 c
       END IF
       END DO
-c      call finalizememmodule() call all 9
+c      call finalizememmodule()
+
+c     call all 9
 
       IF ((sd_t1_d1_exec(1) .eq. exec_flag) .or. 
      & (sd_t1_d1_exec(2) .eq. exec_flag) .or. 
@@ -845,7 +839,6 @@ c      call finalizememmodule() call all 9
      & (sd_t1_d1_exec(9) .eq. exec_flag) ) THEN
          reg_transpose_tg = 1
 
-         write(*,*) "tg debug1"
        CALL sd_t_d1_all_cuda_(sd_t1_d1_args(3),
      &                  sd_t1_d1_args(2),
      &                  sd_t1_d1_args(1),
@@ -859,7 +852,7 @@ c      call finalizememmodule() call all 9
      &      sd_t1_d1_exec(4),sd_t1_d1_exec(5),sd_t1_d1_exec(6),
      &      sd_t1_d1_exec(7),sd_t1_d1_exec(8),sd_t1_d1_exec(9),
      &        reg_transpose_tg)
-                write(*,*) "tg debug2"
+                
       END IF 
 
       IF (.not.MA_POP_STACK(l_bbuf)) 
@@ -924,7 +917,7 @@ C     i0 ( p4 p5 p6 h1 h2 h3 )_vt + = -1 * P( 9 ) * Sum ( p7 ) * t ( p4 p7 h1 h2
       INTEGER k_b_sort
       INTEGER l_b
       INTEGER k_b
-c     new triples code from osu
+c     extra for calling new osu kernels
       INTEGER sd_t1_d1_exec(9)
       INTEGER exec_flag
       INTEGER sd_t1_d1_args(7)
@@ -1551,7 +1544,7 @@ c
       END IF
       END DO
 
-            IF ((sd_t1_d1_exec(1) .eq. exec_flag) .or. 
+      IF ((sd_t1_d1_exec(1) .eq. exec_flag) .or. 
      & (sd_t1_d1_exec(2) .eq. exec_flag) .or. 
      & (sd_t1_d1_exec(3) .eq. exec_flag) .or.
      & (sd_t1_d1_exec(4) .eq. exec_flag) .or.
@@ -1562,7 +1555,6 @@ c
      & (sd_t1_d1_exec(9) .eq. exec_flag) ) THEN
          reg_transpose_tg = 1
 
-         write(*,*) "tg_d2 debug1"
        CALL sd_t_d2_all_cuda_(sd_t1_d1_args(3),
      &                  sd_t1_d1_args(2),
      &                  sd_t1_d1_args(1),
@@ -1576,7 +1568,7 @@ c
      &      sd_t1_d1_exec(4),sd_t1_d1_exec(5),sd_t1_d1_exec(6),
      &      sd_t1_d1_exec(7),sd_t1_d1_exec(8),sd_t1_d1_exec(9),
      &        reg_transpose_tg)
-                write(*,*) "tg_d2 debug2"
+               
       END IF 
 
       IF (.not.MA_POP_STACK(l_bbuf)) 
