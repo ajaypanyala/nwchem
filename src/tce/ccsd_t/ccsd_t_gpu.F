@@ -293,7 +293,8 @@ c     GPU process
      7             int_mb(k_range+t_h1b-1),int_mb(k_range+t_h2b-1),
      8             int_mb(k_range+t_h3b-1),int_mb(k_range+t_p4b-1),
      9             int_mb(k_range+t_p5b-1),int_mb(k_range+t_p6b-1),
-     1            dbl_mb(k_doubles),dbl_mb(k_singles),total_d,total_s)
+     1            dbl_mb(k_doubles),dbl_mb(k_singles))
+c     ,total_d,total_s)
 c          write (*,*) 'F paras ',dbl_mb(k_doubles),dbl_mb(k_singles+1),
 c     1        dbl_mb(k_evl_sorted+int_mb(k_offset+t_h1b-1)),factor_l(1)
 c              write (*,*) 'GPU energy ', energy1, energy_l(1), energy2, 
