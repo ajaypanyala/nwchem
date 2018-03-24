@@ -1,22 +1,35 @@
 language: c
 sudo: required
+osx_image: xcode9.2
 os: 
   - osx
   - linux
 env: 
-  - NWCHEM_MODULES=qmandpw ARMCI_NETWORK=MPI-TS MPI_IMPL="openmpi"
-  - NWCHEM_MODULES=qmandpw ARMCI_NETWORK=MPI-TS MPI_IMPL="mpich"
-  - NWCHEM_MODULES=qmandpw ARMCI_NETWORK=MPI-PR MPI_IMPL="openmpi"
-  - NWCHEM_MODULES=qmandpw ARMCI_NETWORK=MPI-PT MPI_IMPL="mpich"
-  - NWCHEM_MODULES=qmandpw ARMCI_NETWORK=MPI-MT MPI_IMPL="mpich"
-  - NWCHEM_MODULES=qmandpw ARMCI_NETWORK=MPI3   MPI_IMPL="mpich"
+  - NWCHEM_MODULES=qmandpw  ARMCI_NETWORK=MPI-TS MPI_IMPL="openmpi"
+  - NWCHEM_MODULES=tinyqmpw ARMCI_NETWORK=MPI-TS MPI_IMPL="openmpi"
+  - NWCHEM_MODULES=tinyqmpw ARMCI_NETWORK=MPI-TS MPI_IMPL="mpich"
+  - NWCHEM_MODULES=tinyqmpw ARMCI_NETWORK=MPI-PR MPI_IMPL="openmpi"
+  - NWCHEM_MODULES=tinyqmpw ARMCI_NETWORK=MPI-PT MPI_IMPL="mpich"
+  - NWCHEM_MODULES=tinyqmpw ARMCI_NETWORK=MPI-MT MPI_IMPL="mpich"
+  - NWCHEM_MODULES=tinyqmpw ARMCI_NETWORK=MPI3   MPI_IMPL="mpich"
   - NWCHEM_MODULES=tce     ARMCI_NETWORK=MPI-TS MPI_IMPL="openmpi"
 compiler:
   - gcc
 matrix:
   exclude:
     - os: osx
-      env: NWCHEM_MODULES=qmandpw ARMCI_NETWORK=MPI-TS MPI_IMPL="mpich"
+      env: NWCHEM_MODULES=tinyqmpw ARMCI_NETWORK=MPI-TS MPI_IMPL="mpich"
+  allow_failures:
+    - os: osx
+      env: NWCHEM_MODULES=tinyqmpw ARMCI_NETWORK=MPI-TS MPI_IMPL="openmpi"
+    - os: osx
+      env: NWCHEM_MODULES=tinyqmpw ARMCI_NETWORK=MPI-PR MPI_IMPL="openmpi"
+    - os: osx
+      env: NWCHEM_MODULES=tce     ARMCI_NETWORK=MPI-TS MPI_IMPL="openmpi"
+    - os: osx
+      env: NWCHEM_MODULES=qmandpw  ARMCI_NETWORK=MPI-TS MPI_IMPL="openmpi"
+    - os: osx
+      env: NWCHEM_MODULES=tinyqmpw ARMCI_NETWORK=MPI3   MPI_IMPL="mpich"
 git:
   depth: 3
 before_script:
@@ -25,11 +38,12 @@ before_script:
         - gfortran -v
         - mpif90 -show
         - ./travis/config_nwchem.sh
-        - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./travis/build_openblas.sh ; fi
-        - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./travis/build_scalapack.sh ; fi
+        - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./travis/build_openblas.sh;  fi
+        - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./travis/build_scalapack.sh; fi
         - sleep 1
 script:
         - ./travis/compile_nwchem.sh
+        - grep HAVE_SCA $TRAVIS_BUILD_DIR/src/tools/build/config.h || true
         - ./travis/run_qas.sh
 
 
@@ -43,6 +57,7 @@ after_failure:
         - grep -i tce_energy $TRAVIS_BUILD_DIR/src/6log
         - grep d= $TRAVIS_BUILD_DIR/QA/testoutputs/dft_he2+.out
         - grep @ $TRAVIS_BUILD_DIR/QA/testoutputs/h2o_opt.out
-        - cat $TRAVIS_BUILD_DIR/QA/testoutputs/dft_he2+.out
-        - cat $TRAVIS_BUILD_DIR/QA/testoutputs/prop_mep_gcube.out
+        - tail -30 $TRAVIS_BUILD_DIR/QA/testoutputs/dft_he2+.out
+        - tail -30 $TRAVIS_BUILD_DIR/QA/testoutputs/prop_mep_gcube.out
+        - diff $TRAVIS_BUILD_DIR/QA/testoutputs/prop_ch3f.o*nw*
               

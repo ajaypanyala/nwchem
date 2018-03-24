@@ -541,6 +541,14 @@ ifeq ($(GOTMINGW64),1)
    CFLAGS_FORGA +=  -m64
    CC = gcc
 endif
+#detect clang
+GOTCLANG= $(shell $(CC) -dM -E - </dev/null 2> /dev/null |grep __clang__|head -1|cut -c19)
+ifeq ($(GOTCLANG),1)
+  CFLAGS_FORGA += "-fPIC"
+  ifeq ($(TARGET),MACX64)
+    CFLAGS_FORGA +=-DMPICH_NO_ATTR_TYPE_TAGS
+  endif
+endif
 
 ifdef FFLAGS_FORGA
     MAYBE_FFLAGS=FFLAGS="$(FFLAGS_FORGA)"
@@ -568,15 +576,15 @@ ifdef USE_GAGITHUB
 	GET_TOOLS=./get-tools-github
   ifdef USE_GA_RELEASE
     ifndef GA_RELEASE_NO
-      GA_RELEASE_NO=5.6.3
+      GA_RELEASE_NO=5.6.4
     endif
     GA_DIR=ga-$(GA_RELEASE_NO)
   else
 #DEV_GA=1 gives the current "best" dev branch, not develop
 #to get develop, set GA_BRANCH-develop
     ifdef DEV_GA
-      GA_DIR = ga-5.6.3
-      GA_BRANCH = hotfix/5.6.3
+      GA_DIR = ga-5.6.4
+      GA_BRANCH = hotfix/5.6.4
     else
       GA_DIR0=ga-$(GA_BRANCH)
       GA_DIR=$(shell echo $(GA_DIR0) | sed -e 's/\//_/g')
