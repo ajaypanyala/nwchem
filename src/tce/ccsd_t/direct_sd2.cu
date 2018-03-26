@@ -4504,6 +4504,26 @@ void sd_t_d2_all_cuda__(Integer* psize_h3, 	Integer* psize_h2, 	Integer* psize_h
     size_V2_8 		= size_p7 * size_h1 * size_p5 * size_p4;
 
 	//
+	t2_1 = t2_all;
+	t2_2 = t2_all + size_T2_1;
+	t2_3 = t2_all + size_T2_1 + size_T2_2;
+	t2_4 = t2_all + size_T2_1 + size_T2_2 + size_T2_3;
+	t2_5 = t2_all + size_T2_1 + size_T2_2 + size_T2_3 + size_T2_4;
+	t2_6 = t2_all + size_T2_1 + size_T2_2 + size_T2_3 + size_T2_4 + size_T2_5;
+	t2_7 = t2_all + size_T2_1 + size_T2_2 + size_T2_3 + size_T2_4 + size_T2_5 + size_T2_6;
+	t2_8 = t2_all + size_T2_1 + size_T2_2 + size_T2_3 + size_T2_4 + size_T2_5 + size_T2_6 + size_T2_7;
+	t2_9 = t2_all + size_T2_1 + size_T2_2 + size_T2_3 + size_T2_4 + size_T2_5 + size_T2_6 + size_T2_7 + size_T2_8;
+
+	v2_1 = v2_all;
+	v2_2 = v2_all + size_V2_1;
+	v2_3 = v2_all + size_V2_1 + size_V2_2;
+	v2_4 = v2_all + size_V2_1 + size_V2_2 + size_V2_3;
+	v2_5 = v2_all + size_V2_1 + size_V2_2 + size_V2_3 + size_V2_4;
+	v2_6 = v2_all + size_V2_1 + size_V2_2 + size_V2_3 + size_V2_4 + size_V2_5;
+	v2_7 = v2_all + size_V2_1 + size_V2_2 + size_V2_3 + size_V2_4 + size_V2_5 + size_V2_6;
+	v2_8 = v2_all + size_V2_1 + size_V2_2 + size_V2_3 + size_V2_4 + size_V2_5 + size_V2_6 + size_V2_7;
+	v2_9 = v2_all + size_V2_1 + size_V2_2 + size_V2_3 + size_V2_4 + size_V2_5 + size_V2_6 + size_V2_7 + size_V2_8;
+	
 	sd_t_d2_all_cuda(size_h3, size_h2, size_h1, size_p6, size_p5, size_p4, size_p7,
 					t3, 
 					t2_1, v2_1, t2_2, v2_2, t2_3, v2_3, 
