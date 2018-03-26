@@ -1,4 +1,5 @@
 #include "header.h"
+double *t3_d;
 extern    "C" void set_dev_mem_d(int h1d, int h2d, int h3d, int p4d, int p5d,int p6d)
 {
     int size_t3;
