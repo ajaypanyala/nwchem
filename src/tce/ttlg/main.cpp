@@ -6,8 +6,6 @@
 #include <omp.h>
 #include <fstream>
 #include <time.h>
-#include <immintrin.h>
-#include <xmmintrin.h>
 #include <cuComplex.h>
 #include <complex.h>
 
