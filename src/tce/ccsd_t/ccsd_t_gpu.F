@@ -37,6 +37,8 @@ C
 c - T1/X1 LOCALIZATION -------------------
       integer l_t1_local,k_t1_local
       integer size_t1
+      integer max_pdim
+      integer max_hdim
 c ---------------------------------------
 
       double precision energy1,energy2,energy2_t
@@ -95,6 +97,17 @@ c      if (.not.ga_create(mt_dbl,1,1,'total_d',1,1,g_total_d))
 c     1  call errquit('ccsd_t: GA problem',0,GA_ERR)
 c      if (.not.ga_create(mt_dbl,1,1,'total_s',1,1,g_total_s))
 c     1  call errquit('ccsd_t: GA problem',0,GA_ERR)
+
+c max size
+      max_pdim=0
+      do p4b = noab+1,noab+nvab
+         max_pdim = max(max_pdim,int_mb(k_range+p4b-1))
+      enddo
+      max_hdim=0
+      do h1b = 1,noab
+         dim1 = max(max_hdim,int_mb(k_range+h1b-1))
+      enddo
+c end 
 
       nprocs = GA_NNODES()
       count = 0
@@ -191,7 +204,7 @@ c            if (device_me<NUM_DEVICE) then
             call ccsd_t_doubles_gpu(dbl_mb(k_doubles),d_t2,d_v2,
      +        k_t2_offset,
      1        k_v2_offset,t_h1b,t_h2b,t_h3b,t_p4b,t_p5b,t_p6b,2, 
-     2        has_GPU)
+     2        has_GPU,max_pdim,max_hdim)
 c            else
 c            call ccsd_t_doubles(dbl_mb(k_doubles),d_t2,d_v2,k_t2_offset,
 c     1        k_v2_offset,t_h1b,t_h2b,t_h3b,t_p4b,t_p5b,t_p6b,2, 0)

@@ -4554,15 +4554,14 @@ void sd_t_d1_all_cuda_(Integer *psize_h3, Integer *psize_h2, Integer *psize_h1, 
 extern "C"
 void sd_t_d1_all_cuda__(Integer* 	psize_h3, 	Integer* 	psize_h2, 	Integer* 	psize_h1,
 						Integer* 	psize_p6, 	Integer* 	psize_p5, 	Integer* 	psize_p4, 	Integer* 	psize_h7,
-						double* t3,   		double* t2_all,		double* v2_all,
+                        double* t3,   		
+                        double* t2_all, Integer* psize_t2_all,
+                        double* v2_all, Integer* psize_v2_all,
 						Integer* 	pkernel_1, 	Integer* 	pkernel_2, 	Integer* 	pkernel_3,
 						Integer* 	pkernel_4, 	Integer* 	pkernel_5, 	Integer* 	pkernel_6,
 						Integer* 	pkernel_7, 	Integer* 	pkernel_8, 	Integer* 	pkernel_9,
 						Integer* 	popt_register_transpose)
 {
-	unsigned int size_T2_1, size_T2_2, size_T2_3, size_T2_4, size_T2_5, size_T2_6, size_T2_7, size_T2_8;
-	unsigned int size_V2_1, size_V2_2, size_V2_3, size_V2_4, size_V2_5, size_V2_6, size_V2_7, size_V2_8;
-
 	int size_h3 = *psize_h3;
 	int size_h2 = *psize_h2;
 	int size_h1 = *psize_h1;
@@ -4579,7 +4578,9 @@ void sd_t_d1_all_cuda__(Integer* 	psize_h3, 	Integer* 	psize_h2, 	Integer* 	psiz
 	int kernel_7 = *pkernel_7;
 	int kernel_8 = *pkernel_8;
 	int kernel_9 = *pkernel_9;
-	int opt_register_transpose = *popt_register_transpose;
+    int opt_register_transpose = *popt_register_transpose;
+    int size_t2_all = *psize_t2_all;
+    int size_v2_all = *psize_v2_all;
 
 	double* t2_1;	double* v2_1;
 	double* t2_2;	double* v2_2;
@@ -4591,44 +4592,29 @@ void sd_t_d1_all_cuda__(Integer* 	psize_h3, 	Integer* 	psize_h2, 	Integer* 	psiz
 	double* t2_8;	double* v2_8;
 	double* t2_9;	double* v2_9;
 
-	size_T2_1 = size_h7 * size_p4 * size_p5 * size_h1;
-	size_T2_2 = size_h7 * size_p4 * size_p5 * size_h2;
-	size_T2_3 = size_h7 * size_p4 * size_p5 * size_h3;
-	size_T2_4 = size_h7 * size_p5 * size_p6 * size_h1;
-	size_T2_5 = size_h7 * size_p5 * size_p6 * size_h2;
-	size_T2_6 = size_h7 * size_p5 * size_p6 * size_h3;
-	size_T2_7 = size_h7 * size_p4 * size_p6 * size_h1;
-	size_T2_8 = size_h7 * size_p4 * size_p6 * size_h2;
-
-	size_V2_1 = size_h3 * size_h2 * size_p6 * size_h7;
-	size_V2_2 = size_h3 * size_h1 * size_p6 * size_h7;
-	size_V2_3 = size_h2 * size_h1 * size_p6 * size_h7;
-	size_V2_4 = size_h3 * size_h2 * size_p4 * size_h7;
-	size_V2_5 = size_h3 * size_h1 * size_p4 * size_h7;
-	size_V2_6 = size_h2 * size_h1 * size_p4 * size_h7;
-	size_V2_7 = size_h3 * size_h2 * size_p5 * size_h7;
-	size_V2_8 = size_h3 * size_h1 * size_p5 * size_h7;
+    unsigned int size_each_t2 = size_t2_all / 9;
+    unsigned int size_each_v2 = size_v2_all / 9;
 
 	//
 	t2_1 = t2_all;
-	t2_2 = t2_all + size_T2_1;
-	t2_3 = t2_all + size_T2_1 + size_T2_2;
-	t2_4 = t2_all + size_T2_1 + size_T2_2 + size_T2_3;
-	t2_5 = t2_all + size_T2_1 + size_T2_2 + size_T2_3 + size_T2_4;
-	t2_6 = t2_all + size_T2_1 + size_T2_2 + size_T2_3 + size_T2_4 + size_T2_5;
-	t2_7 = t2_all + size_T2_1 + size_T2_2 + size_T2_3 + size_T2_4 + size_T2_5 + size_T2_6;
-	t2_8 = t2_all + size_T2_1 + size_T2_2 + size_T2_3 + size_T2_4 + size_T2_5 + size_T2_6 + size_T2_7;
-	t2_9 = t2_all + size_T2_1 + size_T2_2 + size_T2_3 + size_T2_4 + size_T2_5 + size_T2_6 + size_T2_7 + size_T2_8;
+	t2_2 = t2_all + (size_each_t2 * 1);
+	t2_3 = t2_all + (size_each_t2 * 2);
+	t2_4 = t2_all + (size_each_t2 * 3);
+	t2_5 = t2_all + (size_each_t2 * 4);
+	t2_6 = t2_all + (size_each_t2 * 5);
+	t2_7 = t2_all + (size_each_t2 * 6);
+	t2_8 = t2_all + (size_each_t2 * 7);
+	t2_9 = t2_all + (size_each_t2 * 8);
 
 	v2_1 = v2_all;
-	v2_2 = v2_all + size_V2_1;
-	v2_3 = v2_all + size_V2_1 + size_V2_2;
-	v2_4 = v2_all + size_V2_1 + size_V2_2 + size_V2_3;
-	v2_5 = v2_all + size_V2_1 + size_V2_2 + size_V2_3 + size_V2_4;
-	v2_6 = v2_all + size_V2_1 + size_V2_2 + size_V2_3 + size_V2_4 + size_V2_5;
-	v2_7 = v2_all + size_V2_1 + size_V2_2 + size_V2_3 + size_V2_4 + size_V2_5 + size_V2_6;
-	v2_8 = v2_all + size_V2_1 + size_V2_2 + size_V2_3 + size_V2_4 + size_V2_5 + size_V2_6 + size_V2_7;
-	v2_9 = v2_all + size_V2_1 + size_V2_2 + size_V2_3 + size_V2_4 + size_V2_5 + size_V2_6 + size_V2_7 + size_V2_8;
+	v2_2 = v2_all + (size_each_v2 * 1);
+	v2_3 = v2_all + (size_each_v2 * 2);
+	v2_4 = v2_all + (size_each_v2 * 3);
+	v2_5 = v2_all + (size_each_v2 * 4);
+	v2_6 = v2_all + (size_each_v2 * 5);
+	v2_7 = v2_all + (size_each_v2 * 6);
+	v2_8 = v2_all + (size_each_v2 * 7);
+	v2_9 = v2_all + (size_each_v2 * 8);
 
 	//
 	sd_t_d1_all_cuda(size_h3, size_h2, size_h1, size_p6, size_p5, size_p4, size_h7,
