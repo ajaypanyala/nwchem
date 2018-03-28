@@ -39,6 +39,19 @@ c - T1/X1 LOCALIZATION -------------------
       integer size_t1
       integer max_pdim
       integer max_hdim
+      INTEGER l_abuf1
+      INTEGER l_bbuf1
+      INTEGER l_abuf2
+      INTEGER l_bbuf2
+      INTEGER k_abuf1
+      INTEGER k_bbuf1
+      INTEGER k_abuf2
+      INTEGER k_bbuf2
+      INTEGER abuf_size1
+      INTEGER bbuf_size1
+      INTEGER abuf_size2
+      INTEGER bbuf_size2
+
 c ---------------------------------------
 
       double precision energy1,energy2,energy2_t
@@ -108,6 +121,26 @@ c max size
          max_hdim = max(max_hdim,int_mb(k_range+t_h1b-1))
       enddo
 c end 
+
+      abuf_size1 = 9 * (max_pdim**2) * (max_hdim**2)
+      IF (.not.MA_PUSH_GET(mt_dbl,abuf_size1,'noname_a',
+     + l_abuf1,k_abuf1)) 
+     1 CALL ERRQUIT('ccsd_t_doubles_gpu_1',0,MA_ERR)
+
+      bbuf_size1 = 9 * max_pdim * (max_hdim**3)
+      IF (.not.MA_PUSH_GET(mt_dbl,bbuf_size1,'noname_b',
+     + l_bbuf1,k_bbuf1))
+     1       CALL ERRQUIT('ccsd_t_doubles_gpu_1',0,MA_ERR)
+
+      abuf_size2 = 9 * (max_pdim**2) * (max_hdim**2)
+      IF (.not.MA_PUSH_GET(mt_dbl,abuf_size2,'noname_a2',
+     + l_abuf2,k_abuf2)) 
+     1 CALL ERRQUIT('ccsd_t_doubles_gpu_2',0,MA_ERR)
+
+      bbuf_size2 = 9 * (max_pdim**3) * max_hdim
+      IF (.not.MA_PUSH_GET(mt_dbl,bbuf_size2,'noname_b2',
+     + l_bbuf2,k_bbuf2))
+     1       CALL ERRQUIT('ccsd_t_doubles_gpu_2',0,MA_ERR)
 
       nprocs = GA_NNODES()
       count = 0
@@ -204,7 +237,8 @@ c            if (device_me<NUM_DEVICE) then
             call ccsd_t_doubles_gpu(dbl_mb(k_doubles),d_t2,d_v2,
      +        k_t2_offset,
      1        k_v2_offset,t_h1b,t_h2b,t_h3b,t_p4b,t_p5b,t_p6b,2, 
-     2        has_GPU,max_pdim,max_hdim)
+     2        has_GPU,abuf_size1,bbuf_size1,abuf_size2,bbuf_size2,
+     3        k_abuf1,k_bbuf1,k_abuf2,k_bbuf2)
 c            else
 c            call ccsd_t_doubles(dbl_mb(k_doubles),d_t2,d_v2,k_t2_offset,
 c     1        k_v2_offset,t_h1b,t_h2b,t_h3b,t_p4b,t_p5b,t_p6b,2, 0)
@@ -340,6 +374,17 @@ ccx            count = count + 1
        enddo
       enddo
       next = nxtask(-nprocs,1)
+
+      IF (.not.MA_POP_STACK(l_bbuf2)) 
+     + CALL ERRQUIT('ccsd_t_doubles_gpu_1',7,MA_ERR)
+      IF (.not.MA_POP_STACK(l_abuf2)) 
+     + CALL ERRQUIT('ccsd_t_doubles_gpu_1',8,MA_ERR)
+
+      IF (.not.MA_POP_STACK(l_bbuf1)) 
+     + CALL ERRQUIT('ccsd_t_doubles_gpu_2',7,MA_ERR)
+      IF (.not.MA_POP_STACK(l_abuf1)) 
+     + CALL ERRQUIT('ccsd_t_doubles_gpu_2',8,MA_ERR)
+
 #if 0
       if (.not.ga_create(mt_dbl,1,1,'perturbative',1,1,g_energy))
      1  call errquit('ccsd_t: GA problem',0,GA_ERR)
