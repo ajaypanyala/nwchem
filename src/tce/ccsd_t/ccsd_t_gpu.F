@@ -100,12 +100,12 @@ c     1  call errquit('ccsd_t: GA problem',0,GA_ERR)
 
 c max size
       max_pdim=0
-      do p4b = noab+1,noab+nvab
-         max_pdim = max(max_pdim,int_mb(k_range+p4b-1))
+      do t_p4b = noab+1,noab+nvab
+         max_pdim = max(max_pdim,int_mb(k_range+t_p4b-1))
       enddo
       max_hdim=0
-      do h1b = 1,noab
-         dim1 = max(max_hdim,int_mb(k_range+h1b-1))
+      do t_h1b = 1,noab
+         max_hdim = max(max_hdim,int_mb(k_range+t_h1b-1))
       enddo
 c end 
 
