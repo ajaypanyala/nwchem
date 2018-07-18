@@ -977,8 +977,15 @@ c<-d3p975
               spin_tmp_alpha(noa) = 1
              sym_tmp(noa) = sym
               sym_tmp_alpha(noa) = sym
-             range_tmp(noa) = k*j_ia/nblocks_ia-l_ia
-              range_tmp_alpha(noa) = k*j_ia/nblocks_ia-l_ia
+ckk            range_tmp(noa) = k*j_ia/nblocks_ia-l_ia
+ckk              range_tmp_alpha(noa) = k*j_ia/nblocks_ia-l_ia
+          if(k.ne.nblocks_ia) then
+              range_tmp(noa) = k*isize-l_ia
+              range_tmp_alpha(noa) = k*isize-l_ia
+          else
+              range_tmp(noa) = j_ia-l_ia
+              range_tmp_alpha(noa) = j_ia-l_ia
+          endif
              l_ia = l_ia + range_tmp(noa)
            enddo
            l_a = 0
@@ -1027,7 +1034,12 @@ c<-d3p975
              active_tiles(noa+nob) = 0
              spin_tmp(noa+nob) = 2
              sym_tmp(noa+nob) = sym
-             range_tmp(noa+nob) = k*j_ia/nblocks_ia-l_ia
+ckk            range_tmp(noa+nob) = k*j_ia/nblocks_ia-l_ia
+            if(k.ne.nblocks_ia) then
+             range_tmp(noa+nob) = k*isize-l_ia
+            else
+             range_tmp(noa+nob) = j_ia-l_ia
+            endif 
              l_ia = l_ia + range_tmp(noa+nob)
            enddo
         endif
@@ -1069,8 +1081,15 @@ c<-d3p975
               spin_tmp_alpha(noa+nva) = 1
              sym_tmp(noa+nob+nva) = sym
               sym_tmp_alpha(noa+nva) = sym
-             range_tmp(noa+nob+nva) = k*j_ia/nblocks_ia-l_ia
-              range_tmp_alpha(noa+nva) = k*j_ia/nblocks_ia-l_ia
+cck             range_tmp(noa+nob+nva) = k*j_ia/nblocks_ia-l_ia
+cck              range_tmp_alpha(noa+nva) = k*j_ia/nblocks_ia-l_ia
+          if(k.ne.nblocks_ia) then
+             range_tmp(noa+nob+nva) = k*isize-l_ia
+              range_tmp_alpha(noa+nva) = k*isize-l_ia
+          else
+             range_tmp(noa+nob+nva) = j_ia-l_ia
+             range_tmp_alpha(noa+nva) = j_ia-l_ia
+          endif
              l_ia = l_ia + range_tmp(noa+nob+nva)
            enddo
         endif
@@ -1137,7 +1156,12 @@ c           nblocks = nblocks_a+nblocks_ia
              active_tiles(noa+nob+nva+nvb) = 0
              spin_tmp(noa+nob+nva+nvb) = 2
              sym_tmp(noa+nob+nva+nvb) = sym
-             range_tmp(noa+nob+nva+nvb) = k*j_ia/nblocks_ia-l_ia
+cck            range_tmp(noa+nob+nva+nvb) = k*j_ia/nblocks_ia-l_ia
+           if(k.ne.nblocks_ia) then
+            range_tmp(noa+nob+nva+nvb) = k*isize-l_ia
+           else
+            range_tmp(noa+nob+nva+nvb) = j_ia-l_ia
+           endif
              l_ia = l_ia + range_tmp(noa+nob+nva+nvb)
            enddo
         endif
