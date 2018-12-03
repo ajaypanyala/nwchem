@@ -30,14 +30,17 @@ c
      + cfac(32) + cfac(33) + cfac(34) + cfac(35) + cfac(36) +
      + xfac(34) + xfac(35) + xfac(36) + xfac(37) +
      + cfac(30) + cfac(38) + cfac(39) + cfac(40) + cfac(41) + cfac(42) +
+     + cfac(45) + xfac(45) + 
      + xfac(43) + xfac(64) + cfac(64) +
      + xfac(46) + cfac(46) + xfac(47) + cfac(47) + xfac(40) + xfac(41) +
      + xfac(48) + xfac(49) + xfac(50) + xfac(51) +
      + cfac(48) + cfac(49) + cfac(50) + cfac(51) +
      + xfac(52) + xfac(53) + xfac(54) + xfac(55) + xfac(56) +
      + cfac(52) + cfac(53) + cfac(54) +
-     + xfac(60) + xfac(61) + xfac(62) + xfac(63) + 
-     + xfac(66) + cfac(66) + xfac(67) + cfac(67) + lxdm +
+     + xfac(60) + xfac(61) + xfac(62) + xfac(63) + xfac(68) + xfac(69)+
+     +     xfac(66) + cfac(66) + xfac(67) + cfac(67) +
+     +     cfac(68)+  cfac(69) +
+     L     lxdm +
 cc AJL/Begin/FDE
      + xfac_fde(3) + xfac_fde(4) + xfac_fde(5) + xfac_fde(6) + 
      + xfac_fde(7) +
@@ -172,6 +175,7 @@ cb973     .     xfac(22).ne.0d0.or.
      .     xfac(35).ne.0d0.or.
      .     xfac(36).ne.0d0.or.
      .     xfac(37).ne.0d0.or.
+     .     xfac(45).ne.0d0.or.
      .     xfac(48).ne.0d0.or.
      .     xfac(49).ne.0d0.or.
      .     xfac(50).ne.0d0.or.
@@ -183,7 +187,8 @@ cb973     .     xfac(22).ne.0d0.or.
      .     xfac(56).ne.0d0.or.
      .     xfac(64).ne.0d0.or.
      .     xfac(66).ne.0d0.or.
-     .     xfac(67).ne.0d0.or.
+     .     xfac(68).ne.0d0.or.
+     .     xfac(69).ne.0d0.or.
 c
 chcth     .     cfac(13).ne.0d0.or.
 cCbecke97     .     cfac(14).ne.0d0.or.
@@ -215,6 +220,8 @@ chp414     .     cfac(21).ne.0d0.or.
      .     cfac(52).ne.0d0.or.
      .     cfac(53).ne.0d0.or.
      .     cfac(54).ne.0d0.or.
+     .     cfac(68).ne.0d0.or.
+     .     cfac(69).ne.0d0.or.
      .     cfac(36).ne.0d0)
       if (util_module_avail("nwxc")) then
          call nwxc_getvals("nwxc_has_2nd",out1)
@@ -249,6 +256,7 @@ c
      +      cfac(39) + cfac(40) + xfac(32) + cfac(42) +
      +      cfac(48) + cfac(49) + cfac(50) + cfac(51) +
      +      xfac(66) + cfac(66) + xfac(67) + cfac(67) +
+     +      xfac(68) + cfac(68) + xfac(69) + cfac(69) +
 cc AJL/Begin/FDE
      +      xfac_fde(18) + cfac_fde(25) + xfac_fde(21) + cfac_fde(27) +
      +      xfac_fde(28) + xfac_fde(29) + xfac_fde(33) + xfac_fde(34) + 
@@ -304,6 +312,7 @@ c
       xc_getxcfac=xc_getxcfac.and.
      A     rtdb_get(rtdb, 'dft:cfac', mt_dbl, numfunc,
      &     cfac)
+      write(6,*) 'xcut cfac ',cfac
       return
       end
 c
@@ -450,6 +459,7 @@ c
      .     xfac(36).ne.0d0.or.  ! M06
      .     xfac(37).ne.0d0.or.  ! M06-2X
      .     xfac(39).ne.0d0.or.  ! HCTH (b97d)
+     .     xfac(45).ne.0d0.or.  ! n12
      .     xfac(46).ne.0d0.or.  ! SSB-D
      .     xfac(47).ne.0d0.or.  ! kt1
      .     xfac(48).ne.0d0.or.  ! M08-HX 
@@ -462,6 +472,8 @@ c
      .     xfac(64).ne.0d0.or.  ! MVS15-EXC
      .     xfac(66).ne.0d0.or.  ! SCAN
      .     xfac(67).ne.0d0.or.  ! SCAN-L
+     .     xfac(68).ne.0d0.or.  ! revM06
+     .     xfac(69).ne.0d0.or.  ! revM06-L
 c
      .     cfac(5).ne.0d0.or.   ! PW91
      .     cfac(13).ne.0d0.or.  ! HCTH
@@ -494,6 +506,7 @@ c
      .     cfac(40).ne.0d0.or.  ! M06-2X
      .     cfac(41).ne.0d0.or.  ! HCTH (b97d)
      .     cfac(42).ne.0d0.or.  ! dlDF
+     .     cfac(45).ne.0d0.or.  ! n12
      .     cfac(46).ne.0d0.or.  ! SSB-D
      .     cfac(48).ne.0d0.or.  ! M08-HX
      .     cfac(49).ne.0d0.or.  ! M08-SO
@@ -503,7 +516,9 @@ c
      .     cfac(53).ne.0d0.or.  ! SOGGA11
      .     cfac(54).ne.0d0.or.  ! SOGGA11-X
      .     cfac(66).ne.0d0.or.  ! SCAN
-     .     cfac(67).ne.0d0      ! SCAN-L
+     .     cfac(67).ne.0d0.or.  ! SCAN-L
+     .     cfac(68).ne.0d0.or.  ! revM06
+     .     cfac(69).ne.0d0      ! revM06-L
      .                )
 c
       return

@@ -338,6 +338,9 @@
 *     **** initialize  META GGA ****
       call nwpw_meta_gga_init()
 
+*     **** initialize vdw ****
+      call vdw_DF_init()
+
 *     **** initialize metadynamics ****
       call meta_initialize(rtdb)
 
@@ -716,6 +719,7 @@ c     end if
       call Pack_end()
       call G_end()
       call psp_U_end()
+      call vdw_DF_end()
       call nwpw_meta_gga_end()
       call pspw_end_SIC()
       call pspw_end_HFX()
@@ -854,8 +858,8 @@ c      call frac_occ_end()
      &       '( ',I8,' waves ',I8,' per task)')
  1252 FORMAT(5X,' smooth wavefnc cutoff:  A=',F7.3,' sigma = ',F7.3)
  1260 FORMAT(5X,' Ewald summation: cut radius=',F8.2,'  and',I3)
- 1261 FORMAT(5X,'                  Madelung Wigner-Seitz=',f11.8,
-     >                              ' (alpha=',f11.8,' rs=',f11.8,')')
+ 1261 FORMAT(5X,'                  Madelung Wigner-Seitz=',f14.8,
+     >                              ' (alpha=',f14.8,' rs=',f11.8,')')
  1262 FORMAT(5X,' paw integration: xc lmax=',I3,
      >          ' compensation charge= ',A)
  1270 FORMAT(/' technical parameters:')

@@ -542,6 +542,26 @@ c     **********************************************
      >           'ngrid=  ',int_mb(nxmeta(1)+d-1),
      >           'periodic=  ',int_mb(pmeta(1)+d-1)
 
+            else if (ntype.eq.14) then
+             n1 = int_mb(indxmeta(1)+s1+1)
+             write(luout,'(A,
+     >                   /6x,A,F11.6,4x,A,F11.6,
+     >                   /6x,A,F11.6,F11.6,
+     >                   /6x,A,I5,
+     >                   /6x,A,I2)')
+     >       "  - Bondings Parameters: ",
+     >           'w= ',w,'sigma=   ',sigma,
+     >           'range=  ',dbl_mb(ameta(1)+d-1),dbl_mb(bmeta(1)+d-1),
+     >           'ngrid=  ',int_mb(nxmeta(1)+d-1),
+     >           'periodic=  ',int_mb(pmeta(1)+d-1)
+
+             write(luout,'(A)')" coefficient index1 index2    :"
+             do j=1,n1
+               write(luout,'(F12.6,2I7)') dbl_mb(parammeta(1)+s2+1+j),
+     >                                 int_mb(indxmeta(1)+s1+2*j),
+     >                                 int_mb(indxmeta(1)+s1+2*j+1)
+             end do
+
             end if
 
          end do
@@ -930,6 +950,7 @@ c     **** bond_difference_shell ****
           nion = ion_nion()
           f = nwpw_expression_f(indx(2),nion,dbl_mb(ion_rion_ptr()))
 
+c     **** group distance ****
       else if (ntype.eq.13) then
          n1=indx(2)
          n2=indx(3)
@@ -1393,6 +1414,7 @@ c     **** bond_difference2 ****
      >                        nion,dbl_mb(ion_rion_ptr()),
      >                        fmeta)
 
+c     **** group distances ****
       else if (ntype.eq.13) then
          n1=indx(2)
          n2=indx(3)

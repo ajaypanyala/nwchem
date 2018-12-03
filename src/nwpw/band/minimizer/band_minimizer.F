@@ -292,6 +292,11 @@ c      external      cpsp_comment
       call c_electron_init()
       call c_geodesic_init()
 
+
+*     **** initialize QM/MM ****
+      call band_init_APC(rtdb)
+
+
 *     **** initialize HFX ****
       call band_init_HFX(rtdb,nbrillioun,ispin,ne)
 
@@ -628,6 +633,7 @@ cc      call band_kp_structure(rtdb)
       call c_G_end()
       call band_end_HFX()
       call brillioun_end()
+      call band_end_APC()
       call ion_end()
       call ion_end_FixIon()
       call cpsi_data_end()
@@ -758,7 +764,7 @@ cc      call band_kp_structure(rtdb)
  1258 FORMAT(5x,' number of k-points is very large')
 
  1260 FORMAT(5X,' Ewald summation: cut radius=',F8.2,'  and',I3)
- 1261 FORMAT(5X,'                   madelung=',f11.8)
+ 1261 FORMAT(5X,'                   madelung=',f14.8)
  
  1270 FORMAT(/' technical parameters:')
  1280 FORMAT(5X, ' time step=',F10.2,5X,'fictitious mass=',F10.1)

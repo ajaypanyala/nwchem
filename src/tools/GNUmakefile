@@ -400,6 +400,14 @@ endif
 # sensible that value should be used, and otherwise do without an
 # external BLAS library and build the internal source code version
 # instead. HvD.
+ifndef LAPACK_LIB
+  ifdef BLAS_LIB
+     LAPACK_LIB=$(BLAS_LIB)
+  endif
+  ifdef BLASOPT
+     LAPACK_LIB=$(BLASOPT)
+  endif
+endif
 ifneq ($(BLASOPT),)
     ifneq ($(BLAS_LIB),)
         ifeq ($(BLAS_SIZE),4)
@@ -431,11 +439,7 @@ else
 endif
 
 ifneq ($(LAPACK_LIB),)
-    ifeq ($(LAPACK_SIZE),4)
         MAYBE_LAPACK = --with-lapack="$(strip $(LAPACK_LIB))"
-    else
-        MAYBE_LAPACK = --with-lapack="$(strip $(LAPACK_LIB))"
-    endif
 else
     MAYBE_LAPACK = --without-lapack
 endif
@@ -577,18 +581,19 @@ ifdef DEV_GA
 endif
 
 ifdef USE_GAGITHUB
+  MAKEFLAGS = -j 1 --no-print-directory
 	GET_TOOLS=./get-tools-github
   ifdef USE_GA_RELEASE
     ifndef GA_RELEASE_NO
-      GA_RELEASE_NO=5.6.5
+      GA_RELEASE_NO=5.7
     endif
     GA_DIR=ga-$(GA_RELEASE_NO)
   else
 #DEV_GA=1 gives the current "best" dev branch, not develop
 #to get develop, set GA_BRANCH-develop
     ifdef DEV_GA
-      GA_DIR = ga-5.6.5
-      GA_BRANCH = hotfix/5.6.5
+      GA_DIR = ga-5.7
+      GA_BRANCH = release/5.7
     else
       GA_DIR0=ga-$(GA_BRANCH)
       GA_DIR=$(shell echo $(GA_DIR0) | sed -e 's/\//_/g')
@@ -624,6 +629,15 @@ endif
 ifeq ($(TARGET),CYGWIN64) 
         MAYBE_ARMCI += --disable-weak
 endif # CYGWIN64
+#SCORE-P
+ifeq ($(CC),$(findstring $(CC),scorep scorep-wrapper scorep-gcc scorep-mpicc scorep-cc scorep-nvcc scorep-xlc scorep-xlc_r))
+#fix for configure or cmake
+     MAYBE_HOST += SCOREP_WRAPPER=OFF
+endif
+ifeq ($(FC),$(findstring $(FC),scorep scorep-wrapper scorep-gfortran scorep-mpif90 scorep-ftn scorep-xlf scorep-xlf_r scorep-mpif77))
+#fix for configure or cmake
+     MAYBE_HOST += SCOREP_WRAPPER=OFF
+endif
 BUILDDIR = build
 INSTALLDIR = install
 CONFIGURE_PATH = ../$(GA_DIR)/configure

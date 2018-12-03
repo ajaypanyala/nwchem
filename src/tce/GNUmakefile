@@ -101,7 +101,8 @@ USES_BLAS = tce_mbpt2.F tce_residual_t1.F tce_residual_t2.F \
             ccsd_qr_beta.F daxpyfile.F tce_ao2e_cholesky_orb.F tce_ao2e_disk.F \
             tce_ao2e_new.F tce_dgeev.F tce_mo2e_disk.F tce_mo2e_new.F \
             tce_mo2e_zones_4a_disk_4s_new_patch_m3.F tce_mo2e_zones_4a_disk_ga_N5.F \
-            tce_mo2e_zones_4a_disk_ga_chop_N5.F tce_mod1_new.F new_ga4ind_N5.F new4ind_N5_osu.F
+            tce_mo2e_zones_4a_disk_ga_chop_N5.F tce_mod1_new.F new_ga4ind_N5.F new4ind_N5_osu.F \
+            tce_read_t.o
 
 SUBDIRS = include diis diis2 gradients \
           ccsd ccsd_lambda eomccsd \
@@ -109,7 +110,7 @@ SUBDIRS = include diis diis2 gradients \
           ccd lccd lccsd qcisd cc3 \
           mbpt1 mbpt2 mbpt3 mbpt4 cis cisd cisdt cisdtq \
           ccsd_act eomccsd_act cr_eomccsd_t_act \
-	      sort
+	      sort ducc
           #response ccsd_yr ccsd_alpha ccsd_beta \
 
 ifdef EACCSD

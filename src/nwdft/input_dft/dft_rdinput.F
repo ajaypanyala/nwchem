@@ -580,6 +580,7 @@ c
       cname(40)='            M06-2X Correlation Potential'
       cname(41)='      Becke 1997-D Correlation Potential'
       cname(42)='              dlDF Correlation Potential'
+      cname(45)='               N12 Correlation Potential'
       cname(46)='    simplified PBE Correlation Potential'
       cname(47)='        ------  NO Correlation ---------'
       cname(48)='            M08-HX Correlation Potential'
@@ -592,6 +593,8 @@ c
       cname(64)='revTPSSvariant PBE Correlation Potential'
       cname(66)='              SCAN Correlation Potential'
       cname(67)='            SCAN-L Correlation Potential'
+      cname(68)='            revM06 Correlation Potential'
+      cname(69)='          revM06-L Correlation Potential'
 c
 c     Exchange functional name defaults.
 c
@@ -636,6 +639,7 @@ c
       xname(41)='           CAM-PBE96 Exchange Functional'
       xname(42)='           CAM-LSD   Exchange Functional'
       xname(43)='           LC-wPBE(h)Exchange Functional'
+      xname(45)='                 N12 Exchange Functional'
       xname(46)='               SSB-1 Exchange Functional'
       xname(47)='                 KT1 gradient correction'
       xname(48)='              M08-HX gradient correction'
@@ -654,6 +658,8 @@ c
       xname(64)='         MVS metaGGA Exchange Functional'
       xname(66)='        SCAN metaGGA Exchange Functional'
       xname(67)='      SCAN-L metaGGA Exchange Functional'
+      xname(68)='              revM06 Exchange Functional'
+      xname(69)='            revM06-L Exchange Functional'
 
 c
 c     Exchange-Correlation combination functional name defaults.
@@ -695,6 +701,7 @@ c
       xcname(36)='             M06-2X Method XC Functional'
       xcname(37)='         Becke 97-D Method XC Functional'
       xcname(38)='             LC-BNL Method XC Functional'
+      xcname(45)='                N12 Method XC Functional'
       xcname(46)='              SSB-D Method XC Functional'
       xcname(47)='                KT2 Method XC Functional'
       xcname(48)='             M08-HX Method XC Functional'
@@ -717,6 +724,8 @@ c
       xcname(65)='              HLE16 Method XC Functional'
       xcname(66)='               SCAN Method XC Functional'
       xcname(67)='             SCAN-L Method XC Functional'
+      xcname(68)='             revM06 Method XC Functional'
+      xcname(69)='           revM06-L Method XC Functional'
 c     
 c     place character XC parameters in rtdb
 c     

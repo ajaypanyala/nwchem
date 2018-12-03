@@ -104,12 +104,10 @@ ifdef NO_MPIF
   LIB_DEFINES += -DNO_MPIF
 endif
 
-ifeq ($(TARGET),$(findstring $(TARGET),BGL BGP BGQ LINUX CYGWIN CYGWIN64 CYGNUS INTERIX LINUX64 MACX MACX64))
+ifeq ($(TARGET),$(findstring $(TARGET),BGL BGP BGQ LINUX CYGWIN CYGWIN64 CYGNUS LINUX64 MACX MACX64))
   EXTRA_OBJ = linux_cpu.o linux_shift.o linux_random.o  erfc.o linux_printaff.o
   ifeq ($(LINUXCPU),x86)
-    ifneq ($(TARGET),INTERIX)
-      EXTRA_OBJ += linux_setfpucw.o
-    endif
+    EXTRA_OBJ += linux_setfpucw.o
   endif
   LIB_DEFINES += -DBYTE_SHORT_PACKING  
   ifeq ($(FC),ifc)
@@ -225,7 +223,7 @@ endif
               util_dra_test.o util_eaf_test.o util_sf_test.o \
               ga_lkain_2cpl3.o util_io.o util_xyz.o util_ma.o util_mpinap.o \
 	      ga_lkain_2cpl3_ext.o  util_dgeev.o util_nwsort.o \
-	      util_mygabcast.o util_getppn.o util_units.o \
+	      util_mygabcast.o util_getppn.o util_units.o util_align.o\
               util_intrsc2008.o util_fadvise.o  util_scalapack_info.o\
               ga_conjg.o nwmolden.o ao_1prdm_read.o ao_1prdm_write.o\
               $(EXTRA_OBJ)
@@ -253,9 +251,6 @@ ifdef SPEECH
    OBJ += udp.o
 endif
 
-ifeq ($(TARGET),INTERIX)
-DEFINES += -DNOSOCKLEN
-endif
 ifeq ($(TARGET),LINUX)
 DEFINES += -DNEED_LOC
 endif

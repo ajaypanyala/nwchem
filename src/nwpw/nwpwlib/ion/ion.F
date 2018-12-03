@@ -736,10 +736,10 @@ c         eki1=0.5d0*eki1
       logical  parseqmmm
       external parseqmmm
 
-      if (i.gt.(nion_qm+nion_mm)) then
-         ion_aname_geom = "Qq  "
-         return
-      end if
+c      if (i.gt.(nion_qm+nion_mm)) then
+c         ion_aname_geom = "Qq  "
+c         return
+c      end if
 
 
       if (.not. beom_cent_tag(geom,i,t))
@@ -770,8 +770,6 @@ c         eki1=0.5d0*eki1
       ion_aname_geom = symbol_out
       return
       end
-
-
 
 
 *     ***************************
@@ -1678,7 +1676,7 @@ c         eki1=0.5d0*eki1
 #include "ion.fh"
 
       if (cosmo_on) then
-         ion_nkatm0 = nkatm-1
+         ion_nkatm0 = nkatm-2
       else
          ion_nkatm0 = nkatm
       end if

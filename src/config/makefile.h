@@ -519,11 +519,6 @@ ifeq ($(TARGET),SGI_N32)
     @exit
 endif
 
-ifeq ($(TARGET),DECOSF)
-    @echo DEPRECATED
-    @exit
-endif
-
 ifeq ($(TARGET),HPUX)
 #
 # HPUX 11.0
@@ -1277,7 +1272,7 @@ endif
 endif
 
 
-ifeq ($(TARGET),$(findstring $(TARGET),LINUX CYGNUS CYGWIN INTERIX))
+ifeq ($(TARGET),$(findstring $(TARGET),LINUX CYGNUS CYGWIN))
 #
 #
 # Linux or Cygwin under Windows running on an x86 using g77
@@ -1327,7 +1322,12 @@ ifeq ($(BUILDING_PYTHON),python)
 #   EXTRA_LIBS += -L/home/edo/tcltk/lib/LINUX -ltk8.3 -ltcl8.3 -L/usr/X11R6/lib -lX11 -ldl
 # needed if python was built with pthread support
   ifneq ($(GOTMINGW32),1)
+   PYMAJOR:=$(word 1, $(subst ., ,$(PYTHONVERSION)))
+   ifeq (${PYMAJOR},3)
+   EXTRA_LIBS += $(shell $(PYTHONHOME)/bin/python3-config --libs)  -lnwcutil
+   else
    EXTRA_LIBS += $(shell $(PYTHONHOME)/bin/python-config --libs)  -lnwcutil
+   endif
   endif
 endif
 
@@ -1739,13 +1739,15 @@ endif
          COPTIONS   = -m64
        endif
       endif
-      GOTCLANG= $(shell $(CC) -dM -E - </dev/null 2> /dev/null |grep __clang__|head -1|cut -c19)
+      GOTCLANG= $(shell $(_CC) -dM -E - </dev/null 2> /dev/null |grep __clang__|head -1|cut -c19)
       ifeq ($(GOTCLANG),1)
          COPTIONS   += -fPIC
       endif
       GOTFREEBSD= $(shell uname -o 2>&1|awk ' /FreeBSD/ {print "1";exit}')
-      ifdef GOTFREEBSD
+      ifeq ($(GOTFREEBSD),1)
          DEFINES  +=-DMPICH_NO_ATTR_TYPE_TAGS
+#	 LDOPTIONS +=-Wl,-rpath=/usr/local/lib/gcc7
+	 LDOPTIONS += $(shell mpif90  -show 2>&1 |cut -d " " -f 2) 
       endif
       ifeq ($(_FC),gfortran)
        ifneq ($(DONTHAVEM64OPT),Y)
@@ -1915,6 +1917,10 @@ endif
 
       ifeq ($(_FC),ifort)
      _GOTSSE3= $(shell cat /proc/cpuinfo | egrep sse3 | tail -n 1 | awk ' /sse3/  {print "Y"}')
+     _GOTSSE42= $(shell cat /proc/cpuinfo | egrep sse4_2 | tail -n 1 | awk ' /sse4_2/  {print "Y"}')
+     _GOTAVX= $(shell cat /proc/cpuinfo | egrep avx | tail -n 1 | awk ' /avx/  {print "Y"}')
+     _GOTAVX2= $(shell cat /proc/cpuinfo | egrep fma | tail -n 1 | awk ' /fma/  {print "Y"}')
+     _GOTAVX512F= $(shell cat /proc/cpuinfo | egrep avx512f | tail -n 1 | awk ' /avx512f/  {print "Y"}')
        _IFCE = $(shell ifort -V  2>&1 |head -1 |awk ' /64/ {print "Y";exit};')
        _IFCV7= $(shell ifort -v  2>&1|egrep "Version "|head -n 1|awk ' /7./  {print "Y";exit}')
        _IFCV11= $(shell ifort -logo  2>&1|egrep "Version "|head -n 1|sed 's/.*Version \([0-9][0-9]\).*/\1/' | awk '{if ($$1 >= 11) {print "Y";exit}}')
@@ -2075,7 +2081,19 @@ $(error )
             FOPTIONS += -align array64byte
            DEFINES+= -DINTEL_64ALIGN
          else
-           FOPTIMIZE += -xHost
+#           FOPTIMIZE += -xHost
+#crazy simd options
+	   ifeq ($(_IFCV17), Y)
+	     ifeq ($(_GOTAVX512F),Y)
+	       FOPTIMIZE += -axCORE-AVX512
+	     else ifeq ($(_GOTAVX2),Y)
+	       FOPTIMIZE += -axCORE-AVX2
+	     else ifeq ($(_GOTAVX),Y)
+	         FOPTIMIZE += -axAVX
+	     else ifeq ($(_GOTSSE42),Y)
+                FOPTIMIZE += -axSSE4.2 
+	     endif
+	   endif
          endif
          FOPTIONS += -finline-limit=250
        else
@@ -2152,7 +2170,8 @@ $(error )
             COPTIONS   +=   -xMIC-AVX512 -ftz
             DEFINES+= -DINTEL_64ALIGN
          else
-            COPTIONS   +=   -xHost -ftz
+#            COPTIONS   +=   -xHost -ftz
+            COPTIONS   +=   -ftz
          endif
          ifeq ($(ICCV15ORNEWER), Y)
             ifdef USE_OPTREPORT
@@ -2404,7 +2423,12 @@ ifeq ($(_CPU),$(findstring $(_CPU), ppc64 ppc64le))
 
      ifeq ($(BUILDING_PYTHON),python)
 #   EXTRA_LIBS += -ltk -ltcl -L/usr/X11R6/lib -lX11 -ldl
+   PYMAJOR:=$(word 1, $(subst ., ,$(PYTHONVERSION)))
+   ifeq (${PYMAJOR},3)
+   EXTRA_LIBS += -lnwcutil $(shell $(PYTHONHOME)/bin/python3-config --libs) #-lz
+   else
    EXTRA_LIBS += -lnwcutil $(shell $(PYTHONHOME)/bin/python-config --libs) #-lz
+   endif
   LDOPTIONS += -Wl,--export-dynamic 
      endif
 ifeq ($(NWCHEM_TARGET),CATAMOUNT)
@@ -2581,7 +2605,12 @@ $(error )
 endif
 #
 ifdef USE_PYTHONCONFIG
+PYMAJOR:=$(word 1, $(subst ., ,$(PYTHONVERSION)))
+ifeq (${PYMAJOR},3)
+EXTRA_LIBS += $(shell $(PYTHONHOME)/bin/python3-config --ldflags)
+else
 EXTRA_LIBS += $(shell $(PYTHONHOME)/bin/python-config --ldflags)
+endif
 else
 ifndef PYTHONLIBTYPE
     PYTHONLIBTYPE=a
@@ -2729,8 +2758,8 @@ endif
 # MPI version requires tcgmsg-mpi library
 
 ifdef USE_MPI 
-  #ifeq ($(FC),$(findstring $(FC),mpifrt mpfort mpif77 mpxlf mpif90 ftn))
-  ifeq ($(FC),$(findstring $(FC), ftn))
+  #ifeq ($(FC),$(findstring $(FC),mpifrt mpfort mpif77 mpxlf mpif90 ftn scorep-ftn))
+  ifeq ($(FC),$(findstring $(FC), ftn scorep-ftn))
     LIBMPI =
     MPI_INCLUDE =
     MPI_LIB =
@@ -2740,10 +2769,10 @@ ifdef USE_MPI
       MPIF90YN = $(shell $(NWCHEM_TOP)/src/tools/guess-mpidefs --mpi_include)
       ifeq ($(MPIF90YN),mpif90notfound)
         errormpif90:
-          @echo " "
-          @echo "mpif90 not found. Please add its location to PATH"
-          @echo "e.g. export PATH=/usr/local/bin:/usr/lib64/openmpi/bin:..."
-          @echo " "
+$(info )
+$(info mpif90 not found. Please add its location to PATH)
+$(info e.g. export PATH=/usr/local/bin:/usr/lib64/openmpi/bin:...)
+$(info )
       endif
       MPI_INCLUDE = $(shell $(NWCHEM_TOP)/src/tools/guess-mpidefs --mpi_include)
     endif
