@@ -142,6 +142,11 @@ c end
      + l_bbuf2,k_bbuf2))
      1       CALL ERRQUIT('ccsd_t_doubles_gpu_2',0,MA_ERR)
 
+      CALL DFILL(abuf_size1,0.0d0,dbl_mb(k_abuf1),1)
+      CALL DFILL(bbuf_size1,0.0d0,dbl_mb(k_bbuf1),1)
+      CALL DFILL(abuf_size2,0.0d0,dbl_mb(k_abuf2),1)
+      CALL DFILL(bbuf_size2,0.0d0,dbl_mb(k_bbuf2),1)
+
       nprocs = GA_NNODES()
       count = 0
       next = nxtask(nprocs,1)

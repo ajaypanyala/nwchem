@@ -148,6 +148,8 @@ c -- peta-exa --
       INTEGER a3(9,6)
       INTEGER ia6,ja6
       INTEGER efc
+      INTEGER max_dima
+      INTEGER max_dimb
 c --------------
       DOUBLE PRECISION a_c(*)
       LOGICAL skipped
@@ -250,6 +252,8 @@ c        write(6,*)'step2',ga_nodeid()
 c        call util_flush(6)
 c *************
 c
+      max_dima = abuf_size / 9;
+      max_dimb = bbuf_size / 9;
 
       DO h7b = 1,noab
 
@@ -462,8 +466,8 @@ c     1               int_mb(k_range+h3b-1),int_mb(k_range+h7b-1),
 c     2               int_mb(k_range+p4b-1),
 c     3               int_mb(k_range+p5b-1),int_mb(k_range+p6b-1),
 c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
-      CALL BUF_COPY(dbl_mb(k_abuf + 1*dima),dbl_mb(k_a_sort),dima)
-      CALL BUF_COPY(dbl_mb(k_bbuf + 1*dimb),dbl_mb(k_b_sort),dimb)
+      CALL BUF_COPY(dbl_mb(k_abuf + 1*max_dima),dbl_mb(k_a_sort),dima)
+      CALL BUF_COPY(dbl_mb(k_bbuf + 1*max_dimb),dbl_mb(k_b_sort),dimb)
       sd_t1_d1_exec(2) = exec_flag
 
       ELSE
@@ -507,8 +511,8 @@ c    1               int_mb(k_range+h3b-1),int_mb(k_range+h7b-1),
 c    2               int_mb(k_range+p4b-1),
 c    3               int_mb(k_range+p5b-1),int_mb(k_range+p6b-1),
 c    4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
-      CALL BUF_COPY(dbl_mb(k_abuf + 2*dima),dbl_mb(k_a_sort),dima)
-      CALL BUF_COPY(dbl_mb(k_bbuf + 2*dimb),dbl_mb(k_b_sort),dimb)
+      CALL BUF_COPY(dbl_mb(k_abuf + 2*max_dima),dbl_mb(k_a_sort),dima)
+      CALL BUF_COPY(dbl_mb(k_bbuf + 2*max_dimb),dbl_mb(k_b_sort),dimb)
       sd_t1_d1_exec(3) = exec_flag
 
       ELSE
@@ -553,8 +557,8 @@ c     2               int_mb(k_range+p4b-1),
 c     3               int_mb(k_range+p5b-1),int_mb(k_range+p6b-1),
 c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
 
-      CALL BUF_COPY(dbl_mb(k_abuf + 3*dima),dbl_mb(k_a_sort),dima)
-      CALL BUF_COPY(dbl_mb(k_bbuf + 3*dimb),dbl_mb(k_b_sort),dimb)
+      CALL BUF_COPY(dbl_mb(k_abuf + 3*max_dima),dbl_mb(k_a_sort),dima)
+      CALL BUF_COPY(dbl_mb(k_bbuf + 3*max_dimb),dbl_mb(k_b_sort),dimb)
       sd_t1_d1_exec(4) = exec_flag
 
       ELSE
@@ -599,8 +603,8 @@ c    2               int_mb(k_range+p4b-1),
 c    3               int_mb(k_range+p5b-1),int_mb(k_range+p6b-1),
 c    4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
 
-      CALL BUF_COPY(dbl_mb(k_abuf + 4*dima),dbl_mb(k_a_sort),dima)
-      CALL BUF_COPY(dbl_mb(k_bbuf + 4*dimb),dbl_mb(k_b_sort),dimb)
+      CALL BUF_COPY(dbl_mb(k_abuf + 4*max_dima),dbl_mb(k_a_sort),dima)
+      CALL BUF_COPY(dbl_mb(k_bbuf + 4*max_dimb),dbl_mb(k_b_sort),dimb)
       sd_t1_d1_exec(5) = exec_flag
 
       ELSE
@@ -644,8 +648,8 @@ c     1               int_mb(k_range+h3b-1),int_mb(k_range+h7b-1),
 c     2               int_mb(k_range+p4b-1),
 c     3               int_mb(k_range+p5b-1),int_mb(k_range+p6b-1),
 c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
-      CALL BUF_COPY(dbl_mb(k_abuf + 5*dima),dbl_mb(k_a_sort),dima)
-      CALL BUF_COPY(dbl_mb(k_bbuf + 5*dimb),dbl_mb(k_b_sort),dimb)
+      CALL BUF_COPY(dbl_mb(k_abuf + 5*max_dima),dbl_mb(k_a_sort),dima)
+      CALL BUF_COPY(dbl_mb(k_bbuf + 5*max_dimb),dbl_mb(k_b_sort),dimb)
       sd_t1_d1_exec(6) = exec_flag
 
       ELSE
@@ -690,8 +694,8 @@ c     2               int_mb(k_range+p4b-1),
 c     3               int_mb(k_range+p5b-1),int_mb(k_range+p6b-1),
 c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
 
-      CALL BUF_COPY(dbl_mb(k_abuf + 6*dima),dbl_mb(k_a_sort),dima)
-      CALL BUF_COPY(dbl_mb(k_bbuf + 6*dimb),dbl_mb(k_b_sort),dimb)
+      CALL BUF_COPY(dbl_mb(k_abuf + 6*max_dima),dbl_mb(k_a_sort),dima)
+      CALL BUF_COPY(dbl_mb(k_bbuf + 6*max_dimb),dbl_mb(k_b_sort),dimb)
       sd_t1_d1_exec(7) = exec_flag
 
       ELSE
@@ -736,8 +740,8 @@ c     2               int_mb(k_range+p4b-1),
 c     3               int_mb(k_range+p5b-1),int_mb(k_range+p6b-1),
 c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
 
-      CALL BUF_COPY(dbl_mb(k_abuf + 7*dima),dbl_mb(k_a_sort),dima)
-      CALL BUF_COPY(dbl_mb(k_bbuf + 7*dimb),dbl_mb(k_b_sort),dimb)
+      CALL BUF_COPY(dbl_mb(k_abuf + 7*max_dima),dbl_mb(k_a_sort),dima)
+      CALL BUF_COPY(dbl_mb(k_bbuf + 7*max_dimb),dbl_mb(k_b_sort),dimb)
       sd_t1_d1_exec(8) = exec_flag
 
       ELSE
@@ -781,8 +785,8 @@ c     1               int_mb(k_range+h3b-1),int_mb(k_range+h7b-1),
 c     2               int_mb(k_range+p4b-1),
 c     3               int_mb(k_range+p5b-1),int_mb(k_range+p6b-1),
 c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
-      CALL BUF_COPY(dbl_mb(k_abuf + 8*dima),dbl_mb(k_a_sort),dima)
-      CALL BUF_COPY(dbl_mb(k_bbuf + 8*dimb),dbl_mb(k_b_sort),dimb)
+      CALL BUF_COPY(dbl_mb(k_abuf + 8*max_dima),dbl_mb(k_a_sort),dima)
+      CALL BUF_COPY(dbl_mb(k_bbuf + 8*max_dimb),dbl_mb(k_b_sort),dimb)
       sd_t1_d1_exec(9) = exec_flag
 
       ELSE
@@ -929,6 +933,8 @@ c -- peta-exa --
       INTEGER a3(9,6)
       INTEGER ia6,ja6
       INTEGER efc
+      INTEGER max_dima
+      INTEGER max_dimb
 c --------------
       DOUBLE PRECISION a_c(*)
       LOGICAL skipped
@@ -1024,6 +1030,9 @@ c       write (*,*) "begin one iter in d2"
         enddo 
 c
 
+      max_dima = abuf_size / 9;
+      max_dimb = bbuf_size / 9;
+      
       DO p7b = noab+1,noab+nvab
 
       DO efc = 1,9
@@ -1203,8 +1212,8 @@ c     1               int_mb(k_range+h3b-1),int_mb(k_range+p4b-1),
 c     2               int_mb(k_range+p5b-1),
 c     3               int_mb(k_range+p6b-1),int_mb(k_range+p7b-1),
 c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
-      CALL BUF_COPY(dbl_mb(k_abuf + 1*dima),dbl_mb(k_a_sort),dima)
-      CALL BUF_COPY(dbl_mb(k_bbuf + 1*dimb),dbl_mb(k_b_sort),dimb)
+      CALL BUF_COPY(dbl_mb(k_abuf + 1*max_dima),dbl_mb(k_a_sort),dima)
+      CALL BUF_COPY(dbl_mb(k_bbuf + 1*max_dimb),dbl_mb(k_b_sort),dimb)
       sd_t1_d1_exec(2) = exec_flag
       
       ELSE
@@ -1243,8 +1252,8 @@ c     1               int_mb(k_range+h3b-1),int_mb(k_range+p4b-1),
 c     2               int_mb(k_range+p5b-1),
 c     3               int_mb(k_range+p6b-1),int_mb(k_range+p7b-1),
 c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
-      CALL BUF_COPY(dbl_mb(k_abuf + 2*dima),dbl_mb(k_a_sort),dima)
-      CALL BUF_COPY(dbl_mb(k_bbuf + 2*dimb),dbl_mb(k_b_sort),dimb)
+      CALL BUF_COPY(dbl_mb(k_abuf + 2*max_dima),dbl_mb(k_a_sort),dima)
+      CALL BUF_COPY(dbl_mb(k_bbuf + 2*max_dimb),dbl_mb(k_b_sort),dimb)
       sd_t1_d1_exec(3) = exec_flag
 
       ELSE
@@ -1284,8 +1293,8 @@ c     2               int_mb(k_range+p5b-1),
 c     3               int_mb(k_range+p6b-1),int_mb(k_range+p7b-1),
 c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
 
-      CALL BUF_COPY(dbl_mb(k_abuf + 3*dima),dbl_mb(k_a_sort),dima)
-      CALL BUF_COPY(dbl_mb(k_bbuf + 3*dimb),dbl_mb(k_b_sort),dimb)
+      CALL BUF_COPY(dbl_mb(k_abuf + 3*max_dima),dbl_mb(k_a_sort),dima)
+      CALL BUF_COPY(dbl_mb(k_bbuf + 3*max_dimb),dbl_mb(k_b_sort),dimb)
       sd_t1_d1_exec(4) = exec_flag
 
       ELSE
@@ -1325,8 +1334,8 @@ c     2               int_mb(k_range+p5b-1),
 c     3               int_mb(k_range+p6b-1),int_mb(k_range+p7b-1),
 c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
 
-      CALL BUF_COPY(dbl_mb(k_abuf + 4*dima),dbl_mb(k_a_sort),dima)
-      CALL BUF_COPY(dbl_mb(k_bbuf + 4*dimb),dbl_mb(k_b_sort),dimb)
+      CALL BUF_COPY(dbl_mb(k_abuf + 4*max_dima),dbl_mb(k_a_sort),dima)
+      CALL BUF_COPY(dbl_mb(k_bbuf + 4*max_dimb),dbl_mb(k_b_sort),dimb)
       sd_t1_d1_exec(5) = exec_flag
 
       ELSE
@@ -1365,8 +1374,8 @@ c     1               int_mb(k_range+h3b-1),int_mb(k_range+p4b-1),
 c     2               int_mb(k_range+p5b-1),
 c     3               int_mb(k_range+p6b-1),int_mb(k_range+p7b-1),
 c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
-      CALL BUF_COPY(dbl_mb(k_abuf + 5*dima),dbl_mb(k_a_sort),dima)
-      CALL BUF_COPY(dbl_mb(k_bbuf + 5*dimb),dbl_mb(k_b_sort),dimb)
+      CALL BUF_COPY(dbl_mb(k_abuf + 5*max_dima),dbl_mb(k_a_sort),dima)
+      CALL BUF_COPY(dbl_mb(k_bbuf + 5*max_dimb),dbl_mb(k_b_sort),dimb)
       sd_t1_d1_exec(6) = exec_flag
 
       ELSE
@@ -1406,8 +1415,8 @@ c     2               int_mb(k_range+p5b-1),
 c     3               int_mb(k_range+p6b-1),int_mb(k_range+p7b-1),
 c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
 
-      CALL BUF_COPY(dbl_mb(k_abuf + 6*dima),dbl_mb(k_a_sort),dima)
-      CALL BUF_COPY(dbl_mb(k_bbuf + 6*dimb),dbl_mb(k_b_sort),dimb)
+      CALL BUF_COPY(dbl_mb(k_abuf + 6*max_dima),dbl_mb(k_a_sort),dima)
+      CALL BUF_COPY(dbl_mb(k_bbuf + 6*max_dimb),dbl_mb(k_b_sort),dimb)
       sd_t1_d1_exec(7) = exec_flag
 
       ELSE
@@ -1446,8 +1455,8 @@ c     1               int_mb(k_range+h3b-1),int_mb(k_range+p4b-1),
 c     2               int_mb(k_range+p5b-1),
 c     3               int_mb(k_range+p6b-1),int_mb(k_range+p7b-1),
 c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
-      CALL BUF_COPY(dbl_mb(k_abuf + 7*dima),dbl_mb(k_a_sort),dima)
-      CALL BUF_COPY(dbl_mb(k_bbuf + 7*dimb),dbl_mb(k_b_sort),dimb)
+      CALL BUF_COPY(dbl_mb(k_abuf + 7*max_dima),dbl_mb(k_a_sort),dima)
+      CALL BUF_COPY(dbl_mb(k_bbuf + 7*max_dimb),dbl_mb(k_b_sort),dimb)
       sd_t1_d1_exec(8) = exec_flag
 
       ELSE
@@ -1486,8 +1495,8 @@ c     1               int_mb(k_range+h3b-1),int_mb(k_range+p4b-1),
 c     2               int_mb(k_range+p5b-1),
 c     3               int_mb(k_range+p6b-1),int_mb(k_range+p7b-1),
 c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
-      CALL BUF_COPY(dbl_mb(k_abuf + 8*dima),dbl_mb(k_a_sort),dima)
-      CALL BUF_COPY(dbl_mb(k_bbuf + 8*dimb),dbl_mb(k_b_sort),dimb)
+      CALL BUF_COPY(dbl_mb(k_abuf + 8*max_dima),dbl_mb(k_a_sort),dima)
+      CALL BUF_COPY(dbl_mb(k_bbuf + 8*max_dimb),dbl_mb(k_b_sort),dimb)
       sd_t1_d1_exec(9) = exec_flag
 
       ELSE
