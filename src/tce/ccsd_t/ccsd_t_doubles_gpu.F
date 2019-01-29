@@ -126,7 +126,7 @@ C     i0 ( p4 p5 p6 h1 h2 h3 )_vt + = -1 * P( 9 ) * Sum ( h7 ) * t ( p4 p5 h1 h7
 c     extra for calling new osu kernels
       INTEGER sd_t1_d1_exec(9)
       INTEGER exec_flag
-      INTEGER sd_t1_d1_args(7)
+      INTEGER sd_t1_d1_args(63)
       INTEGER k_abuf
       INTEGER k_bbuf
       INTEGER abuf_size
@@ -261,13 +261,13 @@ c
          sd_t1_d1_exec(efc)=0
       END DO
 
-      sd_t1_d1_args(1) =  int_mb(k_range+t_h1b-1)
-      sd_t1_d1_args(2) =  int_mb(k_range+t_h2b-1)
-      sd_t1_d1_args(3) =  int_mb(k_range+t_h3b-1)
-      sd_t1_d1_args(4) =  int_mb(k_range+h7b-1)
-      sd_t1_d1_args(5) =  int_mb(k_range+t_p4b-1)
-      sd_t1_d1_args(6) =  int_mb(k_range+t_p5b-1)
-      sd_t1_d1_args(7) =  int_mb(k_range+t_p6b-1)
+c      sd_t1_d1_args(1) =  int_mb(k_range+t_h1b-1)
+c      sd_t1_d1_args(2) =  int_mb(k_range+t_h2b-1)
+c      sd_t1_d1_args(3) =  int_mb(k_range+t_h3b-1)
+c      sd_t1_d1_args(4) =  int_mb(k_range+h7b-1)
+c      sd_t1_d1_args(5) =  int_mb(k_range+t_p4b-1)
+c      sd_t1_d1_args(6) =  int_mb(k_range+t_p5b-1)
+c      sd_t1_d1_args(7) =  int_mb(k_range+t_p6b-1)
 
 
       do ia6=1,9
@@ -424,7 +424,13 @@ c     1               int_mb(k_range+h3b-1),int_mb(k_range+h7b-1),
 c     2               int_mb(k_range+p4b-1),
 c     3               int_mb(k_range+p5b-1),int_mb(k_range+p6b-1),
 c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
-
+      sd_t1_d1_args(1) =  int_mb(k_range+h1b-1)
+      sd_t1_d1_args(2) =  int_mb(k_range+h2b-1)
+      sd_t1_d1_args(3) =  int_mb(k_range+h3b-1)
+      sd_t1_d1_args(4) =  int_mb(k_range+h7b-1)
+      sd_t1_d1_args(5) =  int_mb(k_range+p4b-1)
+      sd_t1_d1_args(6) =  int_mb(k_range+p5b-1)
+      sd_t1_d1_args(7) =  int_mb(k_range+p6b-1)
       CALL BUF_COPY(dbl_mb(k_abuf), dbl_mb(k_a_sort),dima)
       CALL BUF_COPY(dbl_mb(k_bbuf), dbl_mb(k_b_sort),dimb)
       sd_t1_d1_exec(1) = exec_flag
@@ -466,6 +472,13 @@ c     1               int_mb(k_range+h3b-1),int_mb(k_range+h7b-1),
 c     2               int_mb(k_range+p4b-1),
 c     3               int_mb(k_range+p5b-1),int_mb(k_range+p6b-1),
 c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
+      sd_t1_d1_args(8) =  int_mb(k_range+h1b-1)
+      sd_t1_d1_args(9) =  int_mb(k_range+h2b-1)
+      sd_t1_d1_args(10) =  int_mb(k_range+h3b-1)
+      sd_t1_d1_args(11) =  int_mb(k_range+h7b-1)
+      sd_t1_d1_args(12) =  int_mb(k_range+p4b-1)
+      sd_t1_d1_args(13) =  int_mb(k_range+p5b-1)
+      sd_t1_d1_args(14) =  int_mb(k_range+p6b-1)
       CALL BUF_COPY(dbl_mb(k_abuf + 1*max_dima),dbl_mb(k_a_sort),dima)
       CALL BUF_COPY(dbl_mb(k_bbuf + 1*max_dimb),dbl_mb(k_b_sort),dimb)
       sd_t1_d1_exec(2) = exec_flag
@@ -511,6 +524,13 @@ c    1               int_mb(k_range+h3b-1),int_mb(k_range+h7b-1),
 c    2               int_mb(k_range+p4b-1),
 c    3               int_mb(k_range+p5b-1),int_mb(k_range+p6b-1),
 c    4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
+      sd_t1_d1_args(15) =  int_mb(k_range+h1b-1)
+      sd_t1_d1_args(16) =  int_mb(k_range+h2b-1)
+      sd_t1_d1_args(17) =  int_mb(k_range+h3b-1)
+      sd_t1_d1_args(18) =  int_mb(k_range+h7b-1)
+      sd_t1_d1_args(19) =  int_mb(k_range+p4b-1)
+      sd_t1_d1_args(20) =  int_mb(k_range+p5b-1)
+      sd_t1_d1_args(21) =  int_mb(k_range+p6b-1)
       CALL BUF_COPY(dbl_mb(k_abuf + 2*max_dima),dbl_mb(k_a_sort),dima)
       CALL BUF_COPY(dbl_mb(k_bbuf + 2*max_dimb),dbl_mb(k_b_sort),dimb)
       sd_t1_d1_exec(3) = exec_flag
@@ -556,7 +576,13 @@ c     1               int_mb(k_range+h3b-1),int_mb(k_range+h7b-1),
 c     2               int_mb(k_range+p4b-1),
 c     3               int_mb(k_range+p5b-1),int_mb(k_range+p6b-1),
 c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
-
+      sd_t1_d1_args(22) =  int_mb(k_range+h1b-1)
+      sd_t1_d1_args(23) =  int_mb(k_range+h2b-1)
+      sd_t1_d1_args(24) =  int_mb(k_range+h3b-1)
+      sd_t1_d1_args(25) =  int_mb(k_range+h7b-1)
+      sd_t1_d1_args(26) =  int_mb(k_range+p4b-1)
+      sd_t1_d1_args(27) =  int_mb(k_range+p5b-1)
+      sd_t1_d1_args(28) =  int_mb(k_range+p6b-1)
       CALL BUF_COPY(dbl_mb(k_abuf + 3*max_dima),dbl_mb(k_a_sort),dima)
       CALL BUF_COPY(dbl_mb(k_bbuf + 3*max_dimb),dbl_mb(k_b_sort),dimb)
       sd_t1_d1_exec(4) = exec_flag
@@ -602,7 +628,13 @@ c    1               int_mb(k_range+h3b-1),int_mb(k_range+h7b-1),
 c    2               int_mb(k_range+p4b-1),
 c    3               int_mb(k_range+p5b-1),int_mb(k_range+p6b-1),
 c    4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
-
+      sd_t1_d1_args(29) =  int_mb(k_range+h1b-1)
+      sd_t1_d1_args(30) =  int_mb(k_range+h2b-1)
+      sd_t1_d1_args(31) =  int_mb(k_range+h3b-1)
+      sd_t1_d1_args(32) =  int_mb(k_range+h7b-1)
+      sd_t1_d1_args(33) =  int_mb(k_range+p4b-1)
+      sd_t1_d1_args(34) =  int_mb(k_range+p5b-1)
+      sd_t1_d1_args(35) =  int_mb(k_range+p6b-1)
       CALL BUF_COPY(dbl_mb(k_abuf + 4*max_dima),dbl_mb(k_a_sort),dima)
       CALL BUF_COPY(dbl_mb(k_bbuf + 4*max_dimb),dbl_mb(k_b_sort),dimb)
       sd_t1_d1_exec(5) = exec_flag
@@ -648,6 +680,13 @@ c     1               int_mb(k_range+h3b-1),int_mb(k_range+h7b-1),
 c     2               int_mb(k_range+p4b-1),
 c     3               int_mb(k_range+p5b-1),int_mb(k_range+p6b-1),
 c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
+      sd_t1_d1_args(36) =  int_mb(k_range+h1b-1)
+      sd_t1_d1_args(37) =  int_mb(k_range+h2b-1)
+      sd_t1_d1_args(38) =  int_mb(k_range+h3b-1)
+      sd_t1_d1_args(39) =  int_mb(k_range+h7b-1)
+      sd_t1_d1_args(40) =  int_mb(k_range+p4b-1)
+      sd_t1_d1_args(41) =  int_mb(k_range+p5b-1)
+      sd_t1_d1_args(42) =  int_mb(k_range+p6b-1)
       CALL BUF_COPY(dbl_mb(k_abuf + 5*max_dima),dbl_mb(k_a_sort),dima)
       CALL BUF_COPY(dbl_mb(k_bbuf + 5*max_dimb),dbl_mb(k_b_sort),dimb)
       sd_t1_d1_exec(6) = exec_flag
@@ -693,7 +732,13 @@ c     1               int_mb(k_range+h3b-1),int_mb(k_range+h7b-1),
 c     2               int_mb(k_range+p4b-1),
 c     3               int_mb(k_range+p5b-1),int_mb(k_range+p6b-1),
 c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
-
+      sd_t1_d1_args(43) =  int_mb(k_range+h1b-1)
+      sd_t1_d1_args(44) =  int_mb(k_range+h2b-1)
+      sd_t1_d1_args(45) =  int_mb(k_range+h3b-1)
+      sd_t1_d1_args(46) =  int_mb(k_range+h7b-1)
+      sd_t1_d1_args(47) =  int_mb(k_range+p4b-1)
+      sd_t1_d1_args(48) =  int_mb(k_range+p5b-1)
+      sd_t1_d1_args(49) =  int_mb(k_range+p6b-1)
       CALL BUF_COPY(dbl_mb(k_abuf + 6*max_dima),dbl_mb(k_a_sort),dima)
       CALL BUF_COPY(dbl_mb(k_bbuf + 6*max_dimb),dbl_mb(k_b_sort),dimb)
       sd_t1_d1_exec(7) = exec_flag
@@ -739,7 +784,13 @@ c     1               int_mb(k_range+h3b-1),int_mb(k_range+h7b-1),
 c     2               int_mb(k_range+p4b-1),
 c     3               int_mb(k_range+p5b-1),int_mb(k_range+p6b-1),
 c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
-
+      sd_t1_d1_args(50) =  int_mb(k_range+h1b-1)
+      sd_t1_d1_args(51) =  int_mb(k_range+h2b-1)
+      sd_t1_d1_args(52) =  int_mb(k_range+h3b-1)
+      sd_t1_d1_args(53) =  int_mb(k_range+h7b-1)
+      sd_t1_d1_args(54) =  int_mb(k_range+p4b-1)
+      sd_t1_d1_args(55) =  int_mb(k_range+p5b-1)
+      sd_t1_d1_args(56) =  int_mb(k_range+p6b-1)
       CALL BUF_COPY(dbl_mb(k_abuf + 7*max_dima),dbl_mb(k_a_sort),dima)
       CALL BUF_COPY(dbl_mb(k_bbuf + 7*max_dimb),dbl_mb(k_b_sort),dimb)
       sd_t1_d1_exec(8) = exec_flag
@@ -785,6 +836,13 @@ c     1               int_mb(k_range+h3b-1),int_mb(k_range+h7b-1),
 c     2               int_mb(k_range+p4b-1),
 c     3               int_mb(k_range+p5b-1),int_mb(k_range+p6b-1),
 c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
+      sd_t1_d1_args(57) =  int_mb(k_range+h1b-1)
+      sd_t1_d1_args(58) =  int_mb(k_range+h2b-1)
+      sd_t1_d1_args(59) =  int_mb(k_range+h3b-1)
+      sd_t1_d1_args(60) =  int_mb(k_range+h7b-1)
+      sd_t1_d1_args(61) =  int_mb(k_range+p4b-1)
+      sd_t1_d1_args(62) =  int_mb(k_range+p5b-1)
+      sd_t1_d1_args(63) =  int_mb(k_range+p6b-1)
       CALL BUF_COPY(dbl_mb(k_abuf + 8*max_dima),dbl_mb(k_a_sort),dima)
       CALL BUF_COPY(dbl_mb(k_bbuf + 8*max_dimb),dbl_mb(k_b_sort),dimb)
       sd_t1_d1_exec(9) = exec_flag
@@ -840,13 +898,14 @@ c     call all 9
      & (sd_t1_d1_exec(9) .eq. exec_flag) ) THEN
          reg_transpose_tg = 1
 
-       CALL sd_t_d1_all_cuda_(sd_t1_d1_args(3),
-     &                  sd_t1_d1_args(2),
-     &                  sd_t1_d1_args(1),
-     &                  sd_t1_d1_args(7),
-     &                  sd_t1_d1_args(6),
-     &                  sd_t1_d1_args(5),
-     &                  sd_t1_d1_args(4),
+       CALL sd_t_d1_all_cuda_(sd_t1_d1_args,
+c    &                  sd_t1_d1_args(3),
+c    &                  sd_t1_d1_args(2),
+c    &                  sd_t1_d1_args(1),
+c    &                  sd_t1_d1_args(7),
+c    &                  sd_t1_d1_args(6),
+c    &                  sd_t1_d1_args(5),
+c    &                  sd_t1_d1_args(4),
      &                  a_c,dbl_mb(k_abuf),abuf_size,
      &                  dbl_mb(k_bbuf), bbuf_size,
      &      sd_t1_d1_exec(1),sd_t1_d1_exec(2),sd_t1_d1_exec(3),
@@ -918,7 +977,7 @@ C     i0 ( p4 p5 p6 h1 h2 h3 )_vt + = -1 * P( 9 ) * Sum ( p7 ) * t ( p4 p7 h1 h2
 c     extra for calling new osu kernels
       INTEGER sd_t1_d1_exec(9)
       INTEGER exec_flag
-      INTEGER sd_t1_d1_args(7)
+      INTEGER sd_t_d2_args(63)
       INTEGER k_abuf
       INTEGER k_bbuf
       INTEGER abuf_size
@@ -1039,13 +1098,13 @@ c
          sd_t1_d1_exec(efc)=0
       END DO
 
-      sd_t1_d1_args(1) =  int_mb(k_range+t_h1b-1)
-      sd_t1_d1_args(2) =  int_mb(k_range+t_h2b-1)
-      sd_t1_d1_args(3) =  int_mb(k_range+t_h3b-1)
-      sd_t1_d1_args(4) =  int_mb(k_range+p7b-1)
-      sd_t1_d1_args(5) =  int_mb(k_range+t_p4b-1)
-      sd_t1_d1_args(6) =  int_mb(k_range+t_p5b-1)
-      sd_t1_d1_args(7) =  int_mb(k_range+t_p6b-1)
+c     sd_t_d2_args(1) =  int_mb(k_range+t_h1b-1)
+c     sd_t_d2_args(2) =  int_mb(k_range+t_h2b-1)
+c     sd_t_d2_args(3) =  int_mb(k_range+t_h3b-1)
+c     sd_t_d2_args(4) =  int_mb(k_range+p7b-1)
+c     sd_t_d2_args(5) =  int_mb(k_range+t_p4b-1)
+c     sd_t_d2_args(6) =  int_mb(k_range+t_p5b-1)
+c     sd_t_d2_args(7) =  int_mb(k_range+t_p6b-1)
 
       do ia6=1,9
       p4b=a3(ia6,1)
@@ -1171,7 +1230,13 @@ c     1               int_mb(k_range+h3b-1),int_mb(k_range+p4b-1),
 c     2               int_mb(k_range+p5b-1),
 c     3               int_mb(k_range+p6b-1),int_mb(k_range+p7b-1),
 c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
-
+      sd_t_d2_args(1) =  int_mb(k_range+h1b-1)
+      sd_t_d2_args(2) =  int_mb(k_range+h2b-1)
+      sd_t_d2_args(3) =  int_mb(k_range+h3b-1)
+      sd_t_d2_args(4) =  int_mb(k_range+p4b-1)
+      sd_t_d2_args(5) =  int_mb(k_range+p5b-1)
+      sd_t_d2_args(6) =  int_mb(k_range+p6b-1)
+      sd_t_d2_args(7) =  int_mb(k_range+p7b-1)
       CALL BUF_COPY(dbl_mb(k_abuf), dbl_mb(k_a_sort),dima)
       CALL BUF_COPY(dbl_mb(k_bbuf), dbl_mb(k_b_sort),dimb)
       sd_t1_d1_exec(1) = exec_flag
@@ -1212,6 +1277,13 @@ c     1               int_mb(k_range+h3b-1),int_mb(k_range+p4b-1),
 c     2               int_mb(k_range+p5b-1),
 c     3               int_mb(k_range+p6b-1),int_mb(k_range+p7b-1),
 c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
+      sd_t_d2_args(8) =  int_mb(k_range+h1b-1)
+      sd_t_d2_args(9) =  int_mb(k_range+h2b-1)
+      sd_t_d2_args(10) =  int_mb(k_range+h3b-1)
+      sd_t_d2_args(11) =  int_mb(k_range+p4b-1)
+      sd_t_d2_args(12) =  int_mb(k_range+p5b-1)
+      sd_t_d2_args(13) =  int_mb(k_range+p6b-1)
+      sd_t_d2_args(14) =  int_mb(k_range+p7b-1)
       CALL BUF_COPY(dbl_mb(k_abuf + 1*max_dima),dbl_mb(k_a_sort),dima)
       CALL BUF_COPY(dbl_mb(k_bbuf + 1*max_dimb),dbl_mb(k_b_sort),dimb)
       sd_t1_d1_exec(2) = exec_flag
@@ -1252,6 +1324,13 @@ c     1               int_mb(k_range+h3b-1),int_mb(k_range+p4b-1),
 c     2               int_mb(k_range+p5b-1),
 c     3               int_mb(k_range+p6b-1),int_mb(k_range+p7b-1),
 c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
+      sd_t_d2_args(15) =  int_mb(k_range+h1b-1)
+      sd_t_d2_args(16) =  int_mb(k_range+h2b-1)
+      sd_t_d2_args(17) =  int_mb(k_range+h3b-1)
+      sd_t_d2_args(18) =  int_mb(k_range+p4b-1)
+      sd_t_d2_args(19) =  int_mb(k_range+p5b-1)
+      sd_t_d2_args(20) =  int_mb(k_range+p6b-1)
+      sd_t_d2_args(21) =  int_mb(k_range+p7b-1)
       CALL BUF_COPY(dbl_mb(k_abuf + 2*max_dima),dbl_mb(k_a_sort),dima)
       CALL BUF_COPY(dbl_mb(k_bbuf + 2*max_dimb),dbl_mb(k_b_sort),dimb)
       sd_t1_d1_exec(3) = exec_flag
@@ -1292,7 +1371,13 @@ c     1               int_mb(k_range+h3b-1),int_mb(k_range+p4b-1),
 c     2               int_mb(k_range+p5b-1),
 c     3               int_mb(k_range+p6b-1),int_mb(k_range+p7b-1),
 c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
-
+      sd_t_d2_args(22) =  int_mb(k_range+h1b-1)
+      sd_t_d2_args(23) =  int_mb(k_range+h2b-1)
+      sd_t_d2_args(24) =  int_mb(k_range+h3b-1)
+      sd_t_d2_args(25) =  int_mb(k_range+p4b-1)
+      sd_t_d2_args(26) =  int_mb(k_range+p5b-1)
+      sd_t_d2_args(27) =  int_mb(k_range+p6b-1)
+      sd_t_d2_args(28) =  int_mb(k_range+p7b-1)
       CALL BUF_COPY(dbl_mb(k_abuf + 3*max_dima),dbl_mb(k_a_sort),dima)
       CALL BUF_COPY(dbl_mb(k_bbuf + 3*max_dimb),dbl_mb(k_b_sort),dimb)
       sd_t1_d1_exec(4) = exec_flag
@@ -1333,7 +1418,13 @@ c     1               int_mb(k_range+h3b-1),int_mb(k_range+p4b-1),
 c     2               int_mb(k_range+p5b-1),
 c     3               int_mb(k_range+p6b-1),int_mb(k_range+p7b-1),
 c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
-
+      sd_t_d2_args(29) =  int_mb(k_range+h1b-1)
+      sd_t_d2_args(30) =  int_mb(k_range+h2b-1)
+      sd_t_d2_args(31) =  int_mb(k_range+h3b-1)
+      sd_t_d2_args(32) =  int_mb(k_range+p4b-1)
+      sd_t_d2_args(33) =  int_mb(k_range+p5b-1)
+      sd_t_d2_args(34) =  int_mb(k_range+p6b-1)
+      sd_t_d2_args(35) =  int_mb(k_range+p7b-1)
       CALL BUF_COPY(dbl_mb(k_abuf + 4*max_dima),dbl_mb(k_a_sort),dima)
       CALL BUF_COPY(dbl_mb(k_bbuf + 4*max_dimb),dbl_mb(k_b_sort),dimb)
       sd_t1_d1_exec(5) = exec_flag
@@ -1374,6 +1465,13 @@ c     1               int_mb(k_range+h3b-1),int_mb(k_range+p4b-1),
 c     2               int_mb(k_range+p5b-1),
 c     3               int_mb(k_range+p6b-1),int_mb(k_range+p7b-1),
 c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
+      sd_t_d2_args(36) =  int_mb(k_range+h1b-1)
+      sd_t_d2_args(37) =  int_mb(k_range+h2b-1)
+      sd_t_d2_args(38) =  int_mb(k_range+h3b-1)
+      sd_t_d2_args(39) =  int_mb(k_range+p4b-1)
+      sd_t_d2_args(40) =  int_mb(k_range+p5b-1)
+      sd_t_d2_args(41) =  int_mb(k_range+p6b-1)
+      sd_t_d2_args(42) =  int_mb(k_range+p7b-1)
       CALL BUF_COPY(dbl_mb(k_abuf + 5*max_dima),dbl_mb(k_a_sort),dima)
       CALL BUF_COPY(dbl_mb(k_bbuf + 5*max_dimb),dbl_mb(k_b_sort),dimb)
       sd_t1_d1_exec(6) = exec_flag
@@ -1414,7 +1512,13 @@ c     1               int_mb(k_range+h3b-1),int_mb(k_range+p4b-1),
 c     2               int_mb(k_range+p5b-1),
 c     3               int_mb(k_range+p6b-1),int_mb(k_range+p7b-1),
 c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
-
+      sd_t_d2_args(43) =  int_mb(k_range+h1b-1)
+      sd_t_d2_args(44) =  int_mb(k_range+h2b-1)
+      sd_t_d2_args(45) =  int_mb(k_range+h3b-1)
+      sd_t_d2_args(46) =  int_mb(k_range+p4b-1)
+      sd_t_d2_args(47) =  int_mb(k_range+p5b-1)
+      sd_t_d2_args(48) =  int_mb(k_range+p6b-1)
+      sd_t_d2_args(49) =  int_mb(k_range+p7b-1)
       CALL BUF_COPY(dbl_mb(k_abuf + 6*max_dima),dbl_mb(k_a_sort),dima)
       CALL BUF_COPY(dbl_mb(k_bbuf + 6*max_dimb),dbl_mb(k_b_sort),dimb)
       sd_t1_d1_exec(7) = exec_flag
@@ -1455,6 +1559,13 @@ c     1               int_mb(k_range+h3b-1),int_mb(k_range+p4b-1),
 c     2               int_mb(k_range+p5b-1),
 c     3               int_mb(k_range+p6b-1),int_mb(k_range+p7b-1),
 c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
+      sd_t_d2_args(50) =  int_mb(k_range+h1b-1)
+      sd_t_d2_args(51) =  int_mb(k_range+h2b-1)
+      sd_t_d2_args(52) =  int_mb(k_range+h3b-1)
+      sd_t_d2_args(53) =  int_mb(k_range+p4b-1)
+      sd_t_d2_args(54) =  int_mb(k_range+p5b-1)
+      sd_t_d2_args(55) =  int_mb(k_range+p6b-1)
+      sd_t_d2_args(56) =  int_mb(k_range+p7b-1)
       CALL BUF_COPY(dbl_mb(k_abuf + 7*max_dima),dbl_mb(k_a_sort),dima)
       CALL BUF_COPY(dbl_mb(k_bbuf + 7*max_dimb),dbl_mb(k_b_sort),dimb)
       sd_t1_d1_exec(8) = exec_flag
@@ -1495,6 +1606,13 @@ c     1               int_mb(k_range+h3b-1),int_mb(k_range+p4b-1),
 c     2               int_mb(k_range+p5b-1),
 c     3               int_mb(k_range+p6b-1),int_mb(k_range+p7b-1),
 c     4               a_c,dbl_mb(k_a_sort),dbl_mb(k_b_sort))
+      sd_t_d2_args(57) =  int_mb(k_range+h1b-1)
+      sd_t_d2_args(58) =  int_mb(k_range+h2b-1)
+      sd_t_d2_args(59) =  int_mb(k_range+h3b-1)
+      sd_t_d2_args(60) =  int_mb(k_range+p4b-1)
+      sd_t_d2_args(61) =  int_mb(k_range+p5b-1)
+      sd_t_d2_args(62) =  int_mb(k_range+p6b-1)
+      sd_t_d2_args(63) =  int_mb(k_range+p7b-1)
       CALL BUF_COPY(dbl_mb(k_abuf + 8*max_dima),dbl_mb(k_a_sort),dima)
       CALL BUF_COPY(dbl_mb(k_bbuf + 8*max_dimb),dbl_mb(k_b_sort),dimb)
       sd_t1_d1_exec(9) = exec_flag
@@ -1542,19 +1660,20 @@ c
      & (sd_t1_d1_exec(9) .eq. exec_flag) ) THEN
          reg_transpose_tg = 1
 
-       CALL sd_t_d2_all_cuda_(sd_t1_d1_args(3),
-     &                  sd_t1_d1_args(2),
-     &                  sd_t1_d1_args(1),
-     &                  sd_t1_d1_args(7),
-     &                  sd_t1_d1_args(6),
-     &                  sd_t1_d1_args(5),
-     &                  sd_t1_d1_args(4),
+      CALL sd_t_d2_all_cuda_(sd_t_d2_args,
+c    &                  sd_t_d2_args(3),
+c    &                  sd_t_d2_args(2),
+c    &                  sd_t_d2_args(1),
+c    &                  sd_t_d2_args(7),
+c    &                  sd_t_d2_args(6),
+c    &                  sd_t_d2_args(5),
+c    &                  sd_t_d2_args(4),
      &                  a_c,dbl_mb(k_abuf),abuf_size,
      &                  dbl_mb(k_bbuf),bbuf_size,
      &      sd_t1_d1_exec(1),sd_t1_d1_exec(2),sd_t1_d1_exec(3),
      &      sd_t1_d1_exec(4),sd_t1_d1_exec(5),sd_t1_d1_exec(6),
      &      sd_t1_d1_exec(7),sd_t1_d1_exec(8),sd_t1_d1_exec(9),
-     &        reg_transpose_tg)
+     &      reg_transpose_tg)
                
       END IF 
 
