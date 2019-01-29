@@ -6298,7 +6298,7 @@ void sd_t_d1_all_cuda(Integer* sizes,
 		double* t2_1, double* v2_1, double* t2_2, double* v2_2,	double* t2_3, double* v2_3, double* t2_4, double* v2_4, double* t2_5, double* v2_5,	double* t2_6, double* v2_6, double* t2_7, double* v2_7, double* t2_8, double* v2_8, double* t2_9, double* v2_9,
         int kernel_1, int kernel_2, int kernel_3, int kernel_4, int kernel_5, int kernel_6, int kernel_7, int kernel_8, int kernel_9, int opt_rt)
 {
-	//TODO: Fix for all kernels
+	//TODO: Fix for all kernels, use sizes[0-63] for kernels 1-9
 	int size_h1 = sizes[0];
 	int size_h2 = sizes[1];
 	int size_h3 = sizes[2];

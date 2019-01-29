@@ -6069,14 +6069,14 @@ void sd_t_d2_all_cuda(Integer *sizes,
     int kernel_1, int kernel_2, int kernel_3, int kernel_4, int kernel_5, int kernel_6, int kernel_7, int kernel_8, int kernel_9,
     int opt_register_transpose)
 {
-            //TODO: Fix for all kernels
-            int size_h1 = sizes[0];
-            int size_h2 = sizes[1];
-            int size_h3 = sizes[2];
-            int size_p4 = sizes[3];
-            int size_p5 = sizes[4];
-            int size_p6 = sizes[5];
-            int size_p7 = sizes[6];
+	//TODO: Fix for all kernels, use sizes[0-63] for kernels 1-9
+    int size_h1 = sizes[0];
+    int size_h2 = sizes[1];
+    int size_h3 = sizes[2];
+    int size_p4 = sizes[3];
+    int size_p5 = sizes[4];
+    int size_p6 = sizes[5];
+    int size_p7 = sizes[6];
 
     // # of Blocks for Each Kernel
     int	 num_blocks_kernel_1,		num_blocks_kernel_2;
