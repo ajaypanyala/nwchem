@@ -6593,13 +6593,20 @@ void sd_t_d1_all_cuda_master(Integer *sizes,
 		int kernel_7, int kernel_8, int kernel_9,
 		int opt_rt)
 {
-    #if 0
-    if (kernel_1 && kernel_2 && kernel_3 && kernel_4 && kernel_5 && kernel_6 && kernel_7 && kernel_8 && kernel_8 && kernel_9)
+    #if 1
+    if (kernel_1 && kernel_2 && kernel_3 && kernel_4 && kernel_5 && kernel_6 && kernel_7 && kernel_8 && kernel_8 && kernel_9
+        && (sizes[0] == sizes[0 + 7] == sizes[0 + 14] == sizes[0 + 21] == sizes[0 + 28] == sizes[0 + 35] == sizes[0 + 42] == sizes[0 + 49] == sizes[0 + 56])
+        && (sizes[1] == sizes[1 + 7] == sizes[1 + 14] == sizes[1 + 21] == sizes[1 + 28] == sizes[1 + 35] == sizes[1 + 42] == sizes[1 + 49] == sizes[1 + 56])
+        && (sizes[2] == sizes[2 + 7] == sizes[2 + 14] == sizes[2 + 21] == sizes[2 + 28] == sizes[2 + 35] == sizes[2 + 42] == sizes[2 + 49] == sizes[2 + 56])
+        && (sizes[3] == sizes[3 + 7] == sizes[3 + 14] == sizes[3 + 21] == sizes[3 + 28] == sizes[3 + 35] == sizes[3 + 42] == sizes[3 + 49] == sizes[3 + 56])
+        && (sizes[5] == sizes[5 + 7] == sizes[5 + 14] == sizes[5 + 21] == sizes[5 + 28] == sizes[5 + 35] == sizes[5 + 42] == sizes[5 + 49] == sizes[4 + 56])
+        && (sizes[4] == sizes[4 + 7] == sizes[4 + 14] == sizes[4 + 21] == sizes[4 + 28] == sizes[4 + 35] == sizes[4 + 42] == sizes[4 + 49] == sizes[5 + 56])
+        && (sizes[6] == sizes[6 + 7] == sizes[6 + 14] == sizes[6 + 21] == sizes[6 + 28] == sizes[6 + 35] == sizes[6 + 42] == sizes[6 + 49] == sizes[6 + 56]))
     {
         // printf (">>[d1][fusion]>> %d, %d, %d, %d, %d, %d, %d, %d, %d\n", kernel_1, kernel_2, kernel_3, kernel_4, kernel_5, kernel_6, kernel_7, kernel_8, kernel_9);
         // printf (">>[d1][fusion]>> %d, %d, %d, %d, %d, %d, %d\n", size_h3, size_h2, size_h1, size_p6, size_p5, size_p4, size_h7);
-		sd_t_d1_all_cuda(sizes,
-		//size_h3, size_h2, size_h1, size_p6, size_p5, size_p4, size_h7,
+        sd_t_d1_all_cuda(sizes,
+        //size_h3, size_h2, size_h1, size_p6, size_p5, size_p4, size_h7,
         t3, 
         t2_1, v2_1, t2_2, v2_2, t2_3, v2_3,
         t2_4, v2_4, t2_5, v2_5, t2_6, v2_6,
