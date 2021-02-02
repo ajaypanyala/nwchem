@@ -20,9 +20,9 @@
 
       logical stalled,mprint
       integer taskid,minimizer,rtdb
-      integer i,k,neall,NN,nb
+      integer i,k,neall,NN,nb,ms
       integer it_in,it_out,icount,bfgscount
-      real*8  EV,virial
+      real*8  EV,virial,Enew
       real*8  tole,tolc,deltae,deltac,deltae_old
       real*8  cx,cy,cz
       real*8  gx,gy,gz
@@ -62,6 +62,15 @@
       external control_rtdb
       logical  control_DOS,ion_disp_on
       external control_DOS,ion_disp_on
+
+      real*8   cpsi_1ke,cpsi_1energy
+      external cpsi_1ke,cpsi_1energy
+      integer  cpsi_data_get_next
+      external cpsi_data_get_next
+      real*8   ewald_e
+      external ewald_e
+      integer  control_ks_algorithm
+      external control_ks_algorithm
 
       call Parallel_taskid(taskid)
 
@@ -104,10 +113,26 @@
         end if
       end if
       if (mprint) call util_flush(luout)
-      if (minimizer.eq.2) call band_Grsm_list_start()
+      if ( (minimizer.eq.2).or.
+     >    ((minimizer.eq.8).and.(control_ks_algorithm().eq.-1))) 
+     >  call band_Grsm_list_start()
+
       if ((minimizer.eq.5).or.(minimizer.eq.8)) it_out = 1
 
-      if (newpsi) call c_sdminimize(10)
+      if (newpsi) then
+         call c_sdminimize(10)
+         call c_bybminimize0()
+         if (control_fractional()) then
+            Enew  = cpsi_1energy()
+            !write(*,*) "ENEW = ",enew + ewald_e()
+            !!call cpsi_1toelectron()
+            call cpsi_1gen_hml()
+            call cpsi_diagonalize_hml()
+            call cpsi_1rotate2()
+            call cpsi_2to1()
+            call cpsi_1define_occupation(0.0d0,.false.)
+         end if
+      end if
 
    2  continue
          icount = icount + 1
@@ -187,21 +212,26 @@
       if (icount.lt.it_out) go to 2
       if (mprint) 
      > write(luout,*) 
-     >  '*** arived at the Maximum iiteration.   terminated.'
+     >  '*** arrived at the Maximum iteration.   terminated.'
 
 *     :::::::::::  end of electron iteration loop  :::::::::::::::::::::
 
    3  continue
-      if (minimizer.eq.2) call band_Grsm_list_end()
+      if ( (minimizer.eq.2).or.
+     >    ((minimizer.eq.8).and.(control_ks_algorithm().eq.-1))) 
+     >   call band_Grsm_list_end()
       if (mprint) CALL nwpw_MESSAGE(3)
 
+      call cpsi_spin_density(en)
 
 *     **** diagonalize hamiltonian and rotate psi ****
-      call cpsi_spin_density(en)
       call cpsi_1gen_hml()
       call cpsi_diagonalize_hml()
-      call cpsi_1rotate2()
-      call cpsi_2to1()
+      if (.not.control_fractional()) then
+         call cpsi_1rotate2()
+         call cpsi_2to1()
+      end if
+      !if (control_fractional()) call cpsi_1define_occupation(.false.,1)
 
 *     *** generate svectors ***
       if (cpsi_spin_orbit()) call cpsi_1gen_svector()

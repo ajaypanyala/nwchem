@@ -97,8 +97,10 @@ c        *****                          agr,fn,fdn      *****
         value = value.and.
      >        BA_push_get(mt_dbl, n2ft3d,'xce',xce(2),xce(1))
       if (.not. value) call errquit('out of stack memory',0,0)
-      call dcopy(n2ft3d,0.0d0,0,dbl_mb(rho(1)),1)
-      call dcopy(n2ft3d,0.0d0,0,dbl_mb(agr(1)),1)
+      call Parallel_shared_vector_zero(.false.,n2ft3d,dbl_mb(rho(1)))
+      call Parallel_shared_vector_zero(.true.,n2ft3d,dbl_mb(agr(1)))
+      !call dcopy(n2ft3d,0.0d0,0,dbl_mb(rho(1)),1)
+      !call dcopy(n2ft3d,0.0d0,0,dbl_mb(agr(1)),1)
 
 
 
@@ -224,6 +226,22 @@ c        ***** calculate fdn=df/d|grad n|  ****
      >                              dbl_mb(xce(1)), !*** not used ??***
      >                              dbl_mb(fn(1)),  !*** not used ??***
      >                              dbl_mb(fdn(1)))
+         else if (gga.eq.16) then
+         call gen_BEEF_BW_restricted(n2ft3d,
+     >                                dbl_mb(rho(1)),
+     >                                dbl_mb(agr(1)),
+     >        x_parameter,c_parameter,0.6001664769d0,
+     >                                dbl_mb(xce(1)), !*** not used ??***
+     >                                dbl_mb(fn(1)),  !*** not used ??***
+     >                                dbl_mb(fdn(1)))
+         else if (gga.eq.17) then
+         call gen_BEEF_BW_restricted(n2ft3d,
+     >                                dbl_mb(rho(1)),
+     >                                dbl_mb(agr(1)),
+     >        x_parameter,c_parameter,0.0d0,
+     >                                dbl_mb(xce(1)), !*** not used ??***
+     >                                dbl_mb(fn(1)),  !*** not used ??***
+     >                                dbl_mb(fdn(1)))
          else
           call errquit('bad gga',0,0)
          end if
@@ -384,9 +402,12 @@ c        *****                          agr,fn,fdn      *****
         value = value.and.
      >        BA_push_get(mt_dbl, n2ft3d,'xce',xce(2),xce(1))
         if (.not. value) call errquit('out of stack memory',0,0)
-      call dcopy(n2ft3d,0.0d0,0,dbl_mb(rhoup(1)),1)
-      call dcopy(n2ft3d,0.0d0,0,dbl_mb(rhodn(1)),1)
-      call dcopy(3*n2ft3d,0.0d0,0,dbl_mb(xagr(1)),1)
+      call Parallel_shared_vector_zero(.false.,n2ft3d,dbl_mb(rhoup(1)))
+      call Parallel_shared_vector_zero(.false.,n2ft3d,dbl_mb(rhodn(1)))
+      call Parallel_shared_vector_zero(.true.,3*n2ft3d,dbl_mb(xagr(1)))
+      !call dcopy(n2ft3d,0.0d0,0,dbl_mb(rhoup(1)),1)
+      !call dcopy(n2ft3d,0.0d0,0,dbl_mb(rhodn(1)),1)
+      !call dcopy(3*n2ft3d,0.0d0,0,dbl_mb(xagr(1)),1)
 
 
 c        ***** calculate rhoup  ****
@@ -568,10 +589,15 @@ c
 c
 c          Put the results back into fdn
 c
-           call dcopy(n2ft3d,dbl_mb(gtmp(1)+n2ft3d),1,
-     +                       dbl_mb(fdn(2)),1)
-           call dcopy(n2ft3d,dbl_mb(gtmp(1)+2*n2ft3d),1,
-     +                       dbl_mb(fdn(3)),1)
+           call Parallel_shared_vector_copy(.false.,n2ft3d,
+     >                     dbl_mb(gtmp(1)+n2ft3d),dbl_mb(fdn(2)))
+           call Parallel_shared_vector_copy(.true.,n2ft3d,
+     >                     dbl_mb(gtmp(1)+2*n2ft3d),dbl_mb(fdn(3)))
+
+c           call dcopy(n2ft3d,dbl_mb(gtmp(1)+n2ft3d),1,
+c     +                       dbl_mb(fdn(2)),1)
+c           call dcopy(n2ft3d,dbl_mb(gtmp(1)+2*n2ft3d),1,
+c     +                       dbl_mb(fdn(3)),1)
 c
          else
  
@@ -616,6 +642,20 @@ c        *****  fdn=(dfx/d|grad nup|,dfx/d|grad ndn|,dfc/d|grad n|) ****
          call gen_B3LYP_BW_unrestricted(n2ft3d,dn,
      >                                  dbl_mb(agr(1)),
      >                                  x_parameter,c_parameter,
+     >                                  dbl_mb(xce(1)), !*** not used ***
+     >                                  dbl_mb(fn(1)), !*** not used ***
+     >                                  dbl_mb(fdn(1)))
+         else if (gga.eq.16) then
+         call gen_BEEF_BW_unrestricted(n2ft3d,dn,
+     >                                  dbl_mb(agr(1)),
+     >          x_parameter,c_parameter,0.6001664769d0,
+     >                                  dbl_mb(xce(1)), !*** not used ***
+     >                                  dbl_mb(fn(1)), !*** not used ***
+     >                                  dbl_mb(fdn(1)))
+         else if (gga.eq.17) then
+         call gen_BEEF_BW_unrestricted(n2ft3d,dn,
+     >                                  dbl_mb(agr(1)),
+     >          x_parameter,c_parameter,0.0d0,
      >                                  dbl_mb(xce(1)), !*** not used ***
      >                                  dbl_mb(fn(1)), !*** not used ***
      >                                  dbl_mb(fdn(1)))

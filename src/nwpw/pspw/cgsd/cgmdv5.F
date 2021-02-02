@@ -240,9 +240,11 @@
       minimizer = control_minimizer()
       mapping   = control_mapping()
 
+*     **** initialize pspw_director ****
+      call pspw_director_init(rtdb)
+
 *     **** initialize psi_data ****
       call psi_data_init(100)
-
 
 
 *     **** initialize D3dB data structure ****
@@ -328,7 +330,7 @@
       call psp_U_init()
 
 *     **** initialize Meta GGA ****
-      call nwpw_meta_gga_init()
+      call nwpw_meta_gga_init(control_gga())
 
 *     **** initialize metadynamics ****
       call meta_initialize(rtdb)
@@ -865,6 +867,9 @@ c       **** inner loop ****
         call xyz_write()
         call MOTION_write(icount*it_in*dt)
 
+*        **** call pspw_director ****
+         call pspw_director(rtdb)
+
 *        **** update thermostats using SA decay ****
          if (SA) then
            tt2 = icount*it_in*dt/sa_decay(2)
@@ -878,12 +883,15 @@ c       **** inner loop ****
      >       write(luout,*) ' *** out of time. iteration terminated'
             go to 102
          end if
+
+
       if (icount.lt.it_out) go to 101
       if (oprint) write(luout,*) 
-     > '*** arived at the Maximum iteration.   terminated.'
+     > '*** arrived at the Maximum iteration.   terminated.'
 
 *::::::::::::::::::::  end of iteration loop  :::::::::::::::::::::::::
       call control_up_print()
+
 
   102 continue
   
@@ -1291,7 +1299,7 @@ c      call frac_occ_end()
      &       '( ',I8,' waves ',I8,' per task)')
   
  1260 FORMAT(5X,' Ewald summation: cut radius=',F8.2,'  and',I3)
- 1261 FORMAT(5X,'                   madelung=',f11.8)
+ 1261 FORMAT(5X,'                   madelung=',f14.8)
  1270 FORMAT(/' technical parameters for minimizer:')
  1271 FORMAT(5x, ' translation constrained')
  1272 FORMAT(5x, ' rotation constrained')
